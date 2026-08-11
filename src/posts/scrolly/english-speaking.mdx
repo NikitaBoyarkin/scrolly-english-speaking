@@ -1,0 +1,232 @@
+---
+configId: "english-speaking"
+---
+
+import ScrollySection from '../../components/scrolly/ScrollySection.astro';
+
+<ScrollySection id="intro">
+  <div class="section-label">Суть подхода</div>
+
+  ## Минимальный рабочий набор
+
+  Для уровня **A2–B1** и цели «нормально общаться на работе» в 2025–2026 году я бы взял минимальный набор:
+
+  - **15–20 мин** speaking с AI
+  - **10–15 карточек** Anki в контексте
+  - **10–15 мин** аутентичного input
+  - иногда **shadowing** или **запись голоса** для уверенности
+
+  Исследования показывают, что устная речь растёт от **частых разговоров в low-stakes ситуациях**, а не от зубрёжки грамматики. Слова лучше запоминаются в предложениях, а уверенность — от deliberate practice и простых фраз для уточнения.
+
+  <div class="data-source-tag">
+    Источники: Cambridge Applied Psycholinguistics, SAGE shadowing review, MDPI Growth Mindset 2025.
+  </div>
+</ScrollySection>
+
+<ScrollySection id="ai-tools">
+  <div class="section-label">Шаг 1</div>
+
+  ## AI-инструменты для speaking practice
+
+  ### Сравнение топ-инструментов
+
+  | Инструмент | Цена | Лучше всего для | Плюсы | Минусы |
+  |------------|------|-----------------|-------|--------|
+  | Loora | ~$12–20/мес | Roleplay: митинги, переговоры, интервью | 24/7 roleplay, real-time pronunciation + grammar | Меньше структуры |
+  | ELSA Speak | $13.33/мес | Произношение, phoneme-level accuracy | 7900+ уроков, IELTS/TOEFL prediction | Менее естественный dialogue |
+  | Speak | $14–30/мес | Структурированная curriculum, B2B | Samsung/Hyundai/LG используют | Premium цена |
+  | TalkMe | ~$10–16/мес | Короткие диалоги, преодоление anxiety | emotion-aware AI tutors | Иногда scripted |
+  | ChatGPT / Gemini Voice | Бесплатно / $20 | Гибкий custom roleplay | Любой сценарий, психологическая безопасность | Нет progress tracking |
+
+  ### Рекомендация
+
+  Начать лучше с **ChatGPT Voice** — он бесплатный, и можно тренировать именно рабочие сценарии. Когда ритм застабилится и захочется структурированного feedback по pronunciation, можно добавить **Loora** или **ELSA Speak**.
+
+  ### 5 рабочих сценариев для DS/Product Analyst
+
+  1. **Daily stand-up update** — 60 сек: вчера / сегодня / блокер.
+  2. **Объяснить A/B тест нетехническому VP** — *What this means in practice is…*
+  3. **Согласовать дедлайн с PM** — polite pushback, conditional structures, alternatives.
+  4. **Small talk перед cross-functional митингом** — выходные, продукт, индустрия.
+  5. **Резюмировать решения по итогам митинга** — action owners, deadlines, open questions.
+
+  <div class="data-source-tag">
+    Источники: I Can Learn 2026, Loora business cases, The Neuron Speak review, Practice Me AI speaking guide.
+  </div>
+</ScrollySection>
+
+<ScrollySection id="vocab">
+  <div class="section-label">Шаг 2</div>
+
+  ## Словарный блок: SRS и sentence cards
+
+  ### Почему sentence/context cards лучше слово-перевод
+
+  Запоминать отдельные слова плохо переносится в речь. Лучше учить **фразы в контексте**: в них сразу зашиты грамматика, коллокации и реальное использование. Контекст даёт больше опор для памяти и помогает быстрее находить нужные слова в разговоре.
+
+  ### Рекомендуемые поля карточки
+
+  1. Target word/phrase
+  2. Cloze sentence (с пропуском)
+  3. Full sentence (ответ)
+  4. Context note (email, meeting, doc)
+  5. Definition/translation
+  6. Collocation hint
+  7. Pronunciation/audio
+
+  ### Пример карточки (Anki cloze)
+
+  - **Front:** We need to `{{c1::validate}}` the dataset before we `{{c2::train}}` the model.
+  - **Back:** We need to validate the dataset before we train the model.
+  - **Extra:** from: data-pipeline Slack thread; collocates: validate assumptions / validate results
+
+  ### Pipeline добычи слов из реальной работы
+
+  1. **Capture** — сохраняй предложения из email, Slack, митингов, Jira, документации.
+  2. **Select** — выбирай frequent / high-impact / caused hesitation.
+  3. **Generate cards** — cloze + context.
+  4. **Review** — ежедневно в Anki/RemNote.
+
+  <div class="data-source-tag">
+    Источники: FSRS Optimal Retention Wiki, Cambridge Effect of Context on L2 Vocabulary, CodersLingo English for Data Analysts.
+  </div>
+</ScrollySection>
+
+<ScrollySection id="input">
+  <div class="section-label">Шаг 3</div>
+
+  ## Аутентичный input
+
+  ### Принцип Comprehensible Input (i+1)
+
+  Aim for **70–90% comprehension**. Если ищешь больше 2–3 слов на страницу — материал слишком сложный. Сначала meaning, потом vocabulary.
+
+  ### Ресурсы для DS/Product Analytics
+
+  | Ресурс | Тип | Уровень | Почему полезно |
+  |--------|-----|---------|----------------|
+  | BBC 6 Minute English | Podcast + transcript | B1 (A2 с transcript) | 6 мин, clear British English |
+  | Business English Pod | Podcast + transcript | B1–B2 | PDF transcript, quizzes |
+  | All Ears English (Business) | Podcast | B1–B2 | Roleplays, practical phrases |
+  | Data & AI with Mukundan | Podcast | A2–B1 | Plain English, career-focused |
+  | HBR IdeaCast | Podcast + transcripts | B2 (B1 с transcript) | Leadership, product, AI psychology |
+  | StatQuest | YouTube | B1–B2 | Short, slow, visual |
+  | Mo Chen | YouTube | B1 | SQL, Python, Power BI |
+  | Data Analysis Journal | Newsletter | B1–B2 | Real case studies |
+  | Lenny's Newsletter | Newsletter | B1–B2 | High-signal product content |
+  | Ploomber SQL Course | Documentation | B1 (A2 с persistence) | Real English documentation |
+
+  ### 3 метода превращения input в speaking material
+
+  1. **Shadowing + Paraphrase** — повторяй 1–2 мин аудио, затем пересказываешь 30–60 сек.
+  2. **Topic-Linked Summary Loop** — одна тема через podcast + article + video → 3 bullet points → 90-sec recording.
+  3. **Question-Answer Drills from Newsletters** — после статьи задай 3 вопроса и отвечай вслух.
+
+  <div class="data-source-tag">
+    Источники: BBC 6 Minute English 2025, Leonardo English Comprehensible Input, StatQuest, Ploomber SQL.
+  </div>
+</ScrollySection>
+
+<ScrollySection id="confidence">
+  <div class="section-label">Шаг 4</div>
+
+  ## Уверенность и психология speaking
+
+  ### Почему взрослые нервничают
+
+  - Fear of negative evaluation — боятся осуждения.
+  - Accent anxiety — Cambridge Accent Anxiety Scale 2025 выделяет три источника: fear of being judged, intergroup rejection, worry about being misunderstood.
+  - Perfectionism / native-speaker ideal — давление «должен звучать как носитель».
+  - Real bias exists — 20% U.S. workers feel judged for accent; communication breakdowns стоят компаниям $18k–$25k/год на сотрудника.
+
+  ### 7 техник повышения уверенности
+
+  1. **Shadowing** — deliberate practice: повторяй за носителем 1–2 мин, мимикуя rhythm и intonation. 6–8+ недель дают прирост fluency, comprehensibility, prosody, снижение anxiety.
+  2. **Self-recording + self-assessment** — исследование Liao 2025 (n=37): самооценка по записям превзошла оценку со стороны партнёров.
+  3. **Low-stakes AI/human partners** — GenAI avatars снижают speaking anxiety vs. traditional classrooms.
+  4. **Intelligibility over perfection** — цель не «звучать как носитель», а «меня понимают».
+  5. **Growth Mindset + micro-goals** — Ho et al. 2025 (n=532): growth mindset → self-efficacy → willingness to communicate.
+  6. **Real-time repair toolkit** — clarification, paraphrasing, filler-word control.
+  7. **Micro-habit stacking** — 10–15 мин/день, привязанные к coffee, commute, lunch.
+
+  ### 10 фраз для неопределённости на митинге
+
+  1. *Could you clarify what you mean by…?*
+  2. *Just to confirm, the deadline is [date] — is that correct?*
+  3. *If I understand correctly, you mean [X]. Is that right?*
+  4. *Sorry, I missed the last part. Could you repeat that?*
+  5. *Let me see if I understood that correctly…*
+  6. *Could you rephrase that with an example?*
+  7. *I want to make sure we’re on the same page.*
+  8. *Hold on — did you say 2026 or 2025?*
+  9. *I’m not familiar with that term. Could you explain it briefly?*
+  10. *Let me get back to you with a clear answer after I check the details.*
+
+  <div class="data-source-tag">
+    Источники: Cambridge Accent Anxiety Scale 2025, MDPI Growth Mindset, Nature VoiceThread Self-Assessment, SAGE Shadowing.
+  </div>
+</ScrollySection>
+
+<ScrollySection id="plan">
+  <div class="section-label">Интеграция</div>
+
+  ## План на 4 недели
+
+  ### Ежедневный блок (30–45 мин)
+
+  | Блок | Время | Инструмент/активность |
+  |------|-------|------------------------|
+  | Speaking | 15–20 мин | ChatGPT Voice / Loora: 1 рабочий сценарий |
+  | Vocab | 10 мин | Anki: 10–15 sentence cards + reviews |
+  | Input | 10–15 мин | Podcast/YouTube/newsletter + transcript |
+
+  ### Неделя 1 — Setup + ритм
+
+  - Настроить ChatGPT Voice или Loora.
+  - Создать Anki deck «Work English — DS/Analytics».
+  - Провести 5 speaking-сессий (по одному сценарию).
+  - Добавить 30–40 sentence cards.
+  - Выбрать 2–3 input-ресурса (BBC 6 Minute English + Data Analysis Journal + StatQuest).
+
+  ### Недели 2–4 — Удержание ритма
+
+  - 5–6 speaking-сессий в неделю.
+  - 30–50 новых карточек в неделю.
+  - 10–15 мин input ежедневно.
+  - Еженедельный 10-минутный review:
+    - Сколько AI-сессий было?
+    - Сколько новых фраз вошло в активный запас?
+    - Сколько минут listened?
+    - Субъективная уверенность (1–10).
+
+  ### Confidence stacking
+
+  | Триггер | Микро-привычка |
+  |---------|----------------|
+  | После утреннего кофе | 2 мин shadowing |
+  | После обеда | 2 мин self-recorded monologue |
+  | Во время commute | Silent thinking in English |
+  | Перед митингом | 1 мин repair phrases mental drill |
+</ScrollySection>
+
+<ScrollySection id="start">
+  <div class="section-label">Действие</div>
+
+  ## С чего начать сегодня
+
+  1. Установить ChatGPT / открыть веб-версию.
+  2. Создать Anki deck «Work English — DS/Analytics».
+  3. Добавить 10 sentence cards из последнего рабочего письма/Slack.
+  4. Выбрать 1 podcast (рекомендация: **BBC 6 Minute English**).
+  5. Провести 1 AI-speaking-сессию по сценарию stand-up.
+  6. Записать 60-секундное self-summary и прослушать.
+  7. Настроить ежедневный reminder на 30–45 мин.
+
+  ## Что в итоге
+
+  1. **Speaking** растёт от low-stakes repetition: 15–20 мин ежедневного AI-roleplay важнее редких интенсивных занятий.
+  2. **Vocabulary** — через контекст, не словари: sentence/cloze cards из реальной работы в Anki; 10–15 новых/день.
+  3. **Input** должен быть понятным: 70–90% comprehension; transcripts обязательны на A2–B1.
+  4. **Уверенность** = техника + mindset: shadowing, self-recording, repair phrases, intelligibility over perfection.
+  5. **Стартовый stack:** ChatGPT Voice (free) + Anki + BBC 6 Minute English → при росте добавлять Loora/ELSA.
+</ScrollySection>

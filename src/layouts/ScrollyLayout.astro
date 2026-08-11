@@ -1,0 +1,263 @@
+---
+import '../components/scrolly/style.css';
+import '../styles/global.css';
+
+export interface ScrollyMetadata {
+  title?: string;
+  description?: string;
+  brand?: string;
+  homeNavUrl?: string;
+}
+
+export interface ScrollyHero {
+  label?: string;
+  titleHtml?: string;
+  subtitleHtml?: string;
+  authorsHtml?: string;
+  teaserHtml?: string;
+  ctaHref?: string;
+  stats?: { target: number; unit: string; label: string }[];
+}
+
+export interface ScrollyViz {
+  key: string;
+  title: string;
+  mount: 'svg' | 'div';
+  props?: unknown;
+  legend?: { label: string; color: string }[];
+  captionHtml?: string;
+}
+
+export interface ScrollySectionConfig {
+  id: string;
+  navLabel: string;
+  mobileLabel: string;
+  viz?: ScrollyViz;
+}
+
+export interface ScrollyTheme {
+  accent?: string;
+  paper?: string;
+  paperDark?: string;
+  ink?: string;
+  secondary?: string;
+}
+
+export interface ScrollyPageConfig {
+  configId: string;
+  metadata: ScrollyMetadata;
+  hero: ScrollyHero;
+  sections: ScrollySectionConfig[];
+  theme: ScrollyTheme;
+  footerHtml?: string;
+}
+
+export interface ScrollyFrontmatter {
+  configId?: string;
+  metadata?: ScrollyMetadata;
+  theme?: ScrollyTheme;
+}
+
+interface Props {
+  frontmatter: ScrollyFrontmatter;
+}
+
+const { frontmatter } = Astro.props;
+const configId = frontmatter?.configId || 'default';
+
+const dataModules = import.meta.glob('../scrolly/data/*.ts', { eager: true }) as Record<
+  string,
+  { config?: ScrollyPageConfig }
+>;
+
+const baseConfig = Object.values(dataModules).find(
+  (m) => m?.config?.configId === configId
+)?.config;
+
+if (!baseConfig) {
+  throw new Error(`No scrolly data module found for configId: ${configId}`);
+}
+
+// Safe merge: only allow plain-text metadata and theme overrides from MDX frontmatter.
+// Hero HTML, sections and footer HTML always come from the trusted data module.
+const metadata: ScrollyMetadata = {
+  ...baseConfig.metadata,
+  ...(frontmatter?.metadata || {}),
+};
+const hero = baseConfig.hero;
+const sections = baseConfig.sections || [];
+const theme: ScrollyTheme = {
+  ...baseConfig.theme,
+  ...(frontmatter?.theme || {}),
+};
+const footerHtml = baseConfig.footerHtml || '';
+
+const accent = theme.accent || '#2563eb';
+const paper = theme.paper || '#ffffff';
+const paperDark = theme.paperDark || '#f7f7f7';
+const ink = theme.ink || '#111111';
+const secondary = theme.secondary || '#06d6a0';
+
+const runtimeConfig = sections.map((s) => ({
+  id: s.id,
+  vizKey: s.viz?.key,
+  vizProps: s.viz?.props,
+}));
+
+const title = metadata.title || 'Scrolly Story';
+const description = metadata.description || '';
+const siteUrl = Astro.site?.toString() || 'https://example.com';
+---
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:site_name" content={metadata.brand || 'Scrolly'} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <style set:html={`:root { --accent: ${accent}; --paper: ${paper}; --paper-dark: ${paperDark}; --ink: ${ink}; --secondary: ${secondary}; }`}></style>
+    <script
+      type="application/json"
+      id="scrolly-section-config"
+      set:html={JSON.stringify(runtimeConfig)}
+    ></script>
+  </head>
+  <body class="scrollytelling-theme">
+    <button class="theme-toggle" aria-label="Toggle theme">🌓</button>
+
+    {
+      metadata.homeNavUrl && (
+        <a href={metadata.homeNavUrl} class="home-link">
+          ← {metadata.brand || 'Home'}
+        </a>
+      )
+    }
+
+    <header class="hero">
+      <div class="hero-inner">
+        {hero.label && <div class="hero-label">{hero.label}</div>}
+        <h1 class="hero-title" set:html={hero.titleHtml || title} />
+        {hero.subtitleHtml && <p class="hero-subtitle" set:html={hero.subtitleHtml} />}
+        {hero.authorsHtml && <div class="hero-meta" set:html={hero.authorsHtml} />}
+        {hero.teaserHtml && <p class="hero-teaser" set:html={hero.teaserHtml} />}
+        {
+          hero.ctaHref && (
+            <a href={hero.ctaHref} class="hero-cta">
+              Начать →
+            </a>
+          )
+        }
+        {
+          hero.stats && (
+            <div class="hero-stats">
+              {hero.stats.map((stat) => (
+                <div class="hero-stat" key={`stat-${stat.label}`}>
+                  <div class="hero-stat-value">
+                    {stat.target}
+                    <span class="hero-stat-unit">{stat.unit}</span>
+                  </div>
+                  <div class="hero-stat-label">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </header>
+
+    <nav class="nav-dots" aria-label="Section navigation">
+      {
+        sections.map((s) => (
+          <button
+            class="nav-dot"
+            data-target={s.id}
+            key={`dot-${s.id}`}
+            aria-label={`Jump to ${s.navLabel || s.id}`}
+            title={s.navLabel || s.id}
+          />
+        ))
+      }
+    </nav>
+
+    <main class="body-columns">
+      <article class="narrative-column">
+        <slot />
+      </article>
+
+      <aside class="viz-column" aria-label="Visualizations">
+        <div class="viz-sticky">
+          {
+            sections.map((s) => {
+              const viz = s.viz;
+              return (
+                <div
+                  class="viz-panel"
+                  data-panel-for={s.id}
+                  key={`panel-${s.id}`}
+                  style={{ display: 'flex' }}
+                >
+                  {viz && (
+                    <div class="viz-header">
+                      <div class="viz-title">{viz.title}</div>
+                      {viz.captionHtml && (
+                        <div class="viz-caption" set:html={viz.captionHtml} />
+                      )}
+                    </div>
+                  )}
+                  <div class="viz-stage">
+                    {viz ? (
+                      viz.mount === 'svg' ? (
+                        <svg
+                          id={`chart-${s.id}`}
+                          data-viz-mount
+                          width="100%"
+                          height="100%"
+                        ></svg>
+                      ) : (
+                        <div
+                          id={`chart-${s.id}`}
+                          data-viz-mount
+                          class="viz-div-mount"
+                        ></div>
+                      )
+                    ) : (
+                      <div class="viz-caption">Визуализация для этого раздела пока не настроена.</div>
+                    )}
+                  </div>
+                  {viz?.legend && (
+                    <div class="viz-legend">
+                      {viz.legend.map((item) => (
+                        <span class="viz-legend-item" key={`legend-${item.label}`}>
+                          <span
+                            class="viz-legend-swatch"
+                            style={{ backgroundColor: item.color }}
+                          />
+                          {item.label}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          }
+        </div>
+      </aside>
+    </main>
+
+    {
+      footerHtml && (
+        <footer class="scrolly-footer" set:html={footerHtml} />
+      )
+    }
+
+    <script src="../scrolly/scrolly-entry.ts"></script>
+  </body>
+</html>

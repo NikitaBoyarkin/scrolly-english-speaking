@@ -1,0 +1,10 @@
+---
+interface Props {
+  id: string;
+}
+const { id } = Astro.props;
+---
+
+<section class="scroll-section" id={`section-${id}`} data-section-id={id}>
+  <slot />
+</section>

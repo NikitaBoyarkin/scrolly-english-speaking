@@ -1,0 +1,31 @@
+---
+import type { MarkdownInstance } from 'astro';
+import ScrollyLayout, { type ScrollyFrontmatter } from '../layouts/ScrollyLayout.astro';
+
+type ScrollyPost = MarkdownInstance<ScrollyFrontmatter>;
+
+export async function getStaticPaths() {
+  const posts = import.meta.glob('../posts/scrolly/*.mdx', { eager: true }) as Record<
+    string,
+    ScrollyPost
+  >;
+
+  return Object.values(posts).map((post) => {
+    const slug = post.file.split('/').pop()?.replace('.mdx', '');
+    if (!slug) {
+      throw new Error(`Could not derive slug from MDX file: ${post.file}`);
+    }
+    return {
+      params: { slug },
+      props: { post },
+    };
+  });
+}
+
+const { post } = Astro.props as { post: ScrollyPost };
+const { Content } = post;
+---
+
+<ScrollyLayout frontmatter={post.frontmatter}>
+  <Content />
+</ScrollyLayout>
