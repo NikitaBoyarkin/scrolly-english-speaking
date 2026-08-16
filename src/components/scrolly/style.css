@@ -1,11 +1,11 @@
+/* Structural tokens shared by every page (not per-story themeable).
+   The 5 themeable color tokens (--paper/--paper-dark/--ink/--accent/--secondary)
+   are injected per-page via an inline `:root` so each story's theme wins in light
+   mode; `.dark-theme` below overrides them in dark mode (it sorts after the
+   inline `:root` in source order, so dark still wins). */
 :root {
-  --paper: #ffffff;
-  --paper-dark: #f7f7f7;
-  --ink: #111111;
   --ink-secondary: #4b5563;
-  --accent: #2563eb;
   --accent-soft: rgba(37, 99, 235, 0.08);
-  --secondary: #06d6a0;
   --warm: #f59e0b;
   --border: #e5e7eb;
   --radius: 1rem;

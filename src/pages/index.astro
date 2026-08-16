@@ -92,6 +92,9 @@ const faviconSvg = `${base}favicon.svg`;
     <meta name="twitter:description" content={siteDescription} />
     <meta name="twitter:image" content={ogImageUrl} />
     <link rel="sitemap" href={`${base}sitemap-index.xml`} />
+    <style
+      set:html={`:root { --accent: #2563eb; --paper: #ffffff; --paper-dark: #f7f7f7; --ink: #111111; --secondary: #06d6a0; }`}
+    ></style>
   </head>
   <body class="scrollytelling-theme">
     <header class="listing-hero">
