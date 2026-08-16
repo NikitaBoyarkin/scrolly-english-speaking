@@ -37,8 +37,15 @@ export function render(mountId: string, props: { resources?: Resource[] }) {
 
   g.append('g')
     .attr('transform', `translate(0, ${innerH})`)
-    .call(d3.axisBottom(xScale).ticks(3).tickFormat((d) => (d === 1 ? 'A2' : d === 2 ? 'B1' : 'B2')))
-    .call((s) => s.selectAll('text').attr('font-size', '0.7rem').attr('fill', 'var(--ink-secondary)'));
+    .call(
+      d3
+        .axisBottom(xScale)
+        .ticks(3)
+        .tickFormat((d) => (d === 1 ? 'A2' : d === 2 ? 'B1' : 'B2')),
+    )
+    .call((s) =>
+      s.selectAll('text').attr('font-size', '0.7rem').attr('fill', 'var(--ink-secondary)'),
+    );
 
   g.append('text')
     .attr('x', innerW / 2)
@@ -49,7 +56,13 @@ export function render(mountId: string, props: { resources?: Resource[] }) {
     .text('Уровень →');
 
   g.append('g')
-    .call(d3.axisBottom(xScale).ticks(3).tickSize(-innerH).tickFormat(() => ''))
+    .call(
+      d3
+        .axisBottom(xScale)
+        .ticks(3)
+        .tickSize(-innerH)
+        .tickFormat(() => ''),
+    )
     .call((s) => s.selectAll('line').attr('stroke', 'var(--border)'))
     .call((s) => s.selectAll('path').remove());
 

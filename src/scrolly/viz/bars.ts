@@ -23,8 +23,15 @@ export function render(mountId: string, props: { items?: BarItem[] }) {
 
   const g = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-  const yScale = d3.scaleBand().domain(items.map((d) => d.label)).range([0, innerH]).padding(0.35);
-  const xScale = d3.scaleLinear().domain([0, d3.max(items, (d) => d.max) || 100]).range([0, innerW]);
+  const yScale = d3
+    .scaleBand()
+    .domain(items.map((d) => d.label))
+    .range([0, innerH])
+    .padding(0.35);
+  const xScale = d3
+    .scaleLinear()
+    .domain([0, d3.max(items, (d) => d.max) || 100])
+    .range([0, innerW]);
 
   g.selectAll('rect.track')
     .data(items)

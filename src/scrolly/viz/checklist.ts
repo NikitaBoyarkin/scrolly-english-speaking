@@ -1,39 +1,10 @@
 import * as d3 from 'd3';
-
-interface ChecklistItem {
-  label: string;
-  done: boolean;
-}
-
-const STORAGE_PREFIX = 'scrolly-checklist:';
-
-function storageKey(mountId: string): string {
-  return `${STORAGE_PREFIX}${mountId}`;
-}
-
-/** Read persisted done-state; falls back to the static props. */
-function loadState(mountId: string, fallback: ChecklistItem[]): boolean[] {
-  try {
-    const raw = localStorage.getItem(storageKey(mountId));
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length === fallback.length) {
-        return parsed.map((v) => Boolean(v));
-      }
-    }
-  } catch {
-    /* ignore corrupt storage */
-  }
-  return fallback.map((i) => i.done);
-}
-
-function saveState(mountId: string, state: boolean[]): void {
-  try {
-    localStorage.setItem(storageKey(mountId), JSON.stringify(state));
-  } catch {
-    /* storage may be unavailable (private mode) — keep session-only state */
-  }
-}
+import {
+  checklistStorageKey,
+  loadChecklistState,
+  saveChecklistState,
+  type ChecklistItem,
+} from './checklist-state';
 
 export function render(mountId: string, props: { items?: ChecklistItem[] }) {
   const node = document.getElementById(mountId);
@@ -58,7 +29,8 @@ export function render(mountId: string, props: { items?: ChecklistItem[] }) {
   const items = props?.items || [];
   if (items.length === 0) return;
 
-  const state = loadState(mountId, items);
+  const key = checklistStorageKey(mountId);
+  const state = loadChecklistState(key, items, localStorage);
 
   const margin = { top: 24, right: 16, bottom: 24, left: 24 };
   const innerW = width - margin.left - margin.right;
@@ -88,7 +60,8 @@ export function render(mountId: string, props: { items?: ChecklistItem[] }) {
       .attr('aria-label', item.label)
       .attr('tabindex', 0);
 
-    row.append('rect')
+    row
+      .append('rect')
       .attr('x', 0)
       .attr('y', boxY)
       .attr('width', 18)
@@ -122,7 +95,7 @@ export function render(mountId: string, props: { items?: ChecklistItem[] }) {
 
     const toggle = () => {
       state[i] = !state[i];
-      saveState(mountId, state);
+      saveChecklistState(key, state, localStorage);
       rerender();
     };
 

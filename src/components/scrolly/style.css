@@ -43,7 +43,9 @@
   border-radius: 999px;
   padding: 0.4rem 0.8rem;
   box-shadow: var(--shadow);
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .home-link:hover,
@@ -152,7 +154,9 @@
   font-weight: 600;
   border-radius: 999px;
   text-decoration: none;
-  transition: transform 0.2s ease, background 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
 }
 
 .hero-cta:hover {
@@ -408,7 +412,9 @@
   background: var(--border);
   border: none;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .nav-dot:hover,

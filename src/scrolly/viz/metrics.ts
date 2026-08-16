@@ -22,7 +22,11 @@ export function render(mountId: string, props: { metrics?: Metric[] }) {
 
   const g = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-  const yScale = d3.scaleBand().domain(metrics.map((d) => d.label)).range([0, innerH]).padding(0.4);
+  const yScale = d3
+    .scaleBand()
+    .domain(metrics.map((d) => d.label))
+    .range([0, innerH])
+    .padding(0.4);
   const xScale = d3
     .scaleLinear()
     .domain([0, d3.max(metrics, (d) => Math.max(d.value, d.target)) || 100])

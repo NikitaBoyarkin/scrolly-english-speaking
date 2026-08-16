@@ -72,9 +72,7 @@ const dataModules = import.meta.glob('../scrolly/data/*.ts', { eager: true }) as
   { config?: ScrollyPageConfig }
 >;
 
-const baseConfig = Object.values(dataModules).find(
-  (m) => m?.config?.configId === configId
-)?.config;
+const baseConfig = Object.values(dataModules).find((m) => m?.config?.configId === configId)?.config;
 
 if (!baseConfig) {
   throw new Error(`No scrolly data module found for configId: ${configId}`);
@@ -127,12 +125,23 @@ const jsonLd = {
 };
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content={accent} />
+    <link rel="manifest" href={`${base}manifest.webmanifest`} />
     <title>{title}</title>
+    <script is:inline>
+      (function () {
+        try {
+          var s = localStorage.getItem('scrolly-theme');
+          var d = s === 'dark' || (!s && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (d) document.documentElement.classList.add('dark-theme');
+        } catch (e) {}
+      })();
+    </script>
     <meta name="description" content={description} />
     <link rel="canonical" href={pageUrl} />
     <link rel="icon" type="image/svg+xml" href={faviconSvg} />
@@ -152,16 +161,20 @@ const jsonLd = {
     <meta name="twitter:image" content={ogImageUrl} />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
     <link rel="sitemap" href={`${base}sitemap-index.xml`} />
-    <style set:html={`:root { --accent: ${accent}; --paper: ${paper}; --paper-dark: ${paperDark}; --ink: ${ink}; --secondary: ${secondary}; }`}></style>
+    <style
+      set:html={`:root { --accent: ${accent}; --paper: ${paper}; --paper-dark: ${paperDark}; --ink: ${ink}; --secondary: ${secondary}; }`}
+    ></style>
     <script
       type="application/json"
       id="scrolly-section-config"
       is:inline
       set:html={JSON.stringify(runtimeConfig)}
-    ></script>
+    />
   </head>
   <body class="scrollytelling-theme">
-    <button class="theme-toggle" aria-label="Переключить тёмную тему" aria-pressed="false">🌓</button>
+    <button class="theme-toggle" aria-label="Переключить тёмную тему" aria-pressed="false"
+      >🌓</button
+    >
 
     {
       metadata.homeNavUrl && (
@@ -227,17 +240,13 @@ const jsonLd = {
             sections.map((s) => {
               const viz = s.viz;
               return (
-                <div
-                  class="viz-panel"
-                  data-panel-for={s.id}
-                  style={{ display: 'flex' }}
-                >
+                <div class="viz-panel" data-panel-for={s.id} style={{ display: 'flex' }}>
                   {viz && (
                     <div class="viz-header">
-                      <div class="viz-title" id={`viz-title-${s.id}`}>{viz.title}</div>
-                      {viz.captionHtml && (
-                        <div class="viz-caption" set:html={viz.captionHtml} />
-                      )}
+                      <div class="viz-title" id={`viz-title-${s.id}`}>
+                        {viz.title}
+                      </div>
+                      {viz.captionHtml && <div class="viz-caption" set:html={viz.captionHtml} />}
                     </div>
                   )}
                   <div class="viz-stage">
@@ -250,7 +259,7 @@ const jsonLd = {
                           aria-labelledby={`viz-title-${s.id}`}
                           width="100%"
                           height="100%"
-                        ></svg>
+                        />
                       ) : (
                         <div
                           id={`chart-${s.id}`}
@@ -258,20 +267,19 @@ const jsonLd = {
                           class="viz-div-mount"
                           role="img"
                           aria-labelledby={`viz-title-${s.id}`}
-                        ></div>
+                        />
                       )
                     ) : (
-                      <div class="viz-caption">Визуализация для этого раздела пока не настроена.</div>
+                      <div class="viz-caption">
+                        Визуализация для этого раздела пока не настроена.
+                      </div>
                     )}
                   </div>
                   {viz?.legend && (
                     <div class="viz-legend">
                       {viz.legend.map((item) => (
                         <span class="viz-legend-item">
-                          <span
-                            class="viz-legend-swatch"
-                            style={{ backgroundColor: item.color }}
-                          />
+                          <span class="viz-legend-swatch" style={{ backgroundColor: item.color }} />
                           {item.label}
                         </span>
                       ))}
@@ -285,11 +293,7 @@ const jsonLd = {
       </aside>
     </main>
 
-    {
-      footerHtml && (
-        <footer class="scrolly-footer" set:html={footerHtml} />
-      )
-    }
+    {footerHtml && <footer class="scrolly-footer" set:html={footerHtml} />}
 
     <script src="../scrolly/scrolly-entry.ts"></script>
   </body>

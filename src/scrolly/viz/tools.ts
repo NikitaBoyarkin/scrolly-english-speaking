@@ -35,24 +35,45 @@ export function render(mountId: string, props: { tools?: Tool[] }) {
   g.append('g')
     .attr('class', 'x-grid')
     .attr('transform', `translate(0, ${innerH})`)
-    .call(d3.axisBottom(xScale).ticks(5).tickSize(-innerH).tickFormat(() => ''))
+    .call(
+      d3
+        .axisBottom(xScale)
+        .ticks(5)
+        .tickSize(-innerH)
+        .tickFormat(() => ''),
+    )
     .call((s) => s.selectAll('line').attr('stroke', 'var(--border)'))
     .call((s) => s.selectAll('path').remove());
 
   g.append('g')
     .attr('class', 'y-grid')
-    .call(d3.axisLeft(yScale).ticks(5).tickSize(-innerW).tickFormat(() => ''))
+    .call(
+      d3
+        .axisLeft(yScale)
+        .ticks(5)
+        .tickSize(-innerW)
+        .tickFormat(() => ''),
+    )
     .call((s) => s.selectAll('line').attr('stroke', 'var(--border)'))
     .call((s) => s.selectAll('path').remove());
 
   g.append('g')
     .attr('transform', `translate(0, ${innerH})`)
     .call(d3.axisBottom(xScale).ticks(5))
-    .call((s) => s.selectAll('text').attr('font-size', '0.7rem').attr('fill', 'var(--ink-secondary)'));
+    .call((s) =>
+      s.selectAll('text').attr('font-size', '0.7rem').attr('fill', 'var(--ink-secondary)'),
+    );
 
   g.append('g')
-    .call(d3.axisLeft(yScale).ticks(5).tickFormat((d) => `$${d}`))
-    .call((s) => s.selectAll('text').attr('font-size', '0.7rem').attr('fill', 'var(--ink-secondary)'));
+    .call(
+      d3
+        .axisLeft(yScale)
+        .ticks(5)
+        .tickFormat((d) => `$${d}`),
+    )
+    .call((s) =>
+      s.selectAll('text').attr('font-size', '0.7rem').attr('fill', 'var(--ink-secondary)'),
+    );
 
   g.append('text')
     .attr('x', innerW / 2)

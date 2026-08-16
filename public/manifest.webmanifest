@@ -1,0 +1,19 @@
+{
+  "name": "Scrolly English Speaking",
+  "short_name": "Scrolly",
+  "description": "Scrollytelling-исследования и гайды по английскому для рабочих разговоров.",
+  "start_url": "/scrolly-english-speaking/",
+  "scope": "/scrolly-english-speaking/",
+  "display": "standalone",
+  "theme_color": "#2563eb",
+  "background_color": "#ffffff",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

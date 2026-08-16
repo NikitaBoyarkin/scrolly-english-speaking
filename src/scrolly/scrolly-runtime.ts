@@ -29,10 +29,8 @@ const vizRenderers: Record<string, VizRenderer> = {
 export function initScrollyRuntime() {
   const rawConfig = document.getElementById('scrolly-section-config')?.textContent || '';
   const sectionConfig: { id: string; vizKey?: string; vizProps?: unknown }[] = rawConfig
-    ? (parseJsonSafe(rawConfig) as
-        | { id: string; vizKey?: string; vizProps?: unknown }[]
-        | null
-        | undefined) ?? []
+    ? ((parseJsonSafe(rawConfig) as
+        { id: string; vizKey?: string; vizProps?: unknown }[] | null | undefined) ?? [])
     : [];
 
   const sectionConfigMap = new Map(sectionConfig.map((s) => [s.id, s]));
@@ -47,7 +45,7 @@ export function initScrollyRuntime() {
         vizProps: cfg?.vizProps,
         mounted: false,
       };
-    }
+    },
   );
 
   const panels = new Map<string, HTMLElement>();
@@ -112,7 +110,7 @@ export function initScrollyRuntime() {
         }
       });
     },
-    { threshold: 0.45, rootMargin: '-10% 0px -25% 0px' }
+    { threshold: 0.45, rootMargin: '-10% 0px -25% 0px' },
   );
 
   sections.forEach((s) => {
@@ -124,7 +122,9 @@ export function initScrollyRuntime() {
     dot.addEventListener('click', () => {
       const target = dot.getAttribute('data-target');
       if (target) {
-        document.getElementById(`section-${target}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document
+          .getElementById(`section-${target}`)
+          ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
   });

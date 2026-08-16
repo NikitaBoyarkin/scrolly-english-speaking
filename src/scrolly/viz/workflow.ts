@@ -59,7 +59,7 @@ export function render(mountId: string, props: { steps?: WorkflowStep[] }) {
       .append('path')
       .attr(
         'd',
-        `M ${x2} ${y2} L ${x2 - ahLen * Math.cos(angle - Math.PI / 6)} ${y2 - ahLen * Math.sin(angle - Math.PI / 6)} L ${x2 - ahLen * Math.cos(angle + Math.PI / 6)} ${y2 - ahLen * Math.sin(angle + Math.PI / 6)} Z`
+        `M ${x2} ${y2} L ${x2 - ahLen * Math.cos(angle - Math.PI / 6)} ${y2 - ahLen * Math.sin(angle - Math.PI / 6)} L ${x2 - ahLen * Math.cos(angle + Math.PI / 6)} ${y2 - ahLen * Math.sin(angle + Math.PI / 6)} Z`,
       )
       .attr('fill', 'var(--border)');
   }
@@ -74,8 +74,7 @@ export function render(mountId: string, props: { steps?: WorkflowStep[] }) {
     g.append('circle').attr('r', 34).attr('fill', step.color).attr('opacity', 0.12);
     g.append('circle').attr('r', 18).attr('fill', step.color);
 
-    g
-      .append('text')
+    g.append('text')
       .attr('text-anchor', 'middle')
       .attr('y', -28)
       .attr('font-size', '0.78rem')
@@ -83,8 +82,7 @@ export function render(mountId: string, props: { steps?: WorkflowStep[] }) {
       .attr('fill', 'var(--ink)')
       .text(step.label);
 
-    g
-      .append('text')
+    g.append('text')
       .attr('text-anchor', 'middle')
       .attr('y', -44)
       .attr('font-size', '0.65rem')

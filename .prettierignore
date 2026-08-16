@@ -2,3 +2,7 @@ dist/
 .astro/
 node_modules/
 package-lock.json
+
+# MDX mixes JSX with markdown lists; prettier's markdown formatter can break the
+# JSX/list boundaries. Hand-format these instead.
+*.mdx

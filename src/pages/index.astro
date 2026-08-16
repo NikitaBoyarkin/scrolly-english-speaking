@@ -25,10 +25,7 @@ interface ScrollyPageConfig {
 
 type Post = MarkdownInstance<{ configId?: string }>;
 
-const posts = import.meta.glob('../posts/scrolly/*.mdx', { eager: true }) as Record<
-  string,
-  Post
->;
+const posts = import.meta.glob('../posts/scrolly/*.mdx', { eager: true }) as Record<string, Post>;
 const dataModules = import.meta.glob('../scrolly/data/*.ts', { eager: true }) as Record<
   string,
   { config?: ScrollyPageConfig }
@@ -67,7 +64,18 @@ const faviconSvg = `${base}favicon.svg`;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#2563eb" />
+    <link rel="manifest" href={`${base}manifest.webmanifest`} />
     <title>{siteTitle}</title>
+    <script is:inline>
+      (function () {
+        try {
+          var s = localStorage.getItem('scrolly-theme');
+          var d = s === 'dark' || (!s && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (d) document.documentElement.classList.add('dark-theme');
+        } catch (e) {}
+      })();
+    </script>
     <meta name="description" content={siteDescription} />
     <link rel="canonical" href={pageUrl} />
     <link rel="icon" type="image/svg+xml" href={faviconSvg} />
@@ -99,7 +107,10 @@ const faviconSvg = `${base}favicon.svg`;
         stories.map((s) => (
           <a class="story-card" href={`${base}${s.slug}`}>
             <div class="story-card-label">{s.config.hero.label || 'Гайд'}</div>
-            <h2 class="story-card-title" set:html={s.config.hero.titleHtml || s.config.metadata.title} />
+            <h2
+              class="story-card-title"
+              set:html={s.config.hero.titleHtml || s.config.metadata.title}
+            />
             {s.config.metadata.description && (
               <p class="story-card-desc">{s.config.metadata.description}</p>
             )}
@@ -159,7 +170,10 @@ const faviconSvg = `${base}favicon.svg`;
         box-shadow: var(--shadow);
         text-decoration: none;
         color: var(--ink);
-        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        transition:
+          transform 0.2s ease,
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
       }
       .story-card:hover,
       .story-card:focus-visible {

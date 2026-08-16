@@ -16,7 +16,10 @@ export function prepareSvg(mountId: string): SvgSize | null {
   const rect = node.getBoundingClientRect();
   if (rect.width === 0 || rect.height === 0) return null;
 
-  svg.attr('viewBox', `0 0 ${rect.width} ${rect.height}`).attr('width', rect.width).attr('height', rect.height);
+  svg
+    .attr('viewBox', `0 0 ${rect.width} ${rect.height}`)
+    .attr('width', rect.width)
+    .attr('height', rect.height);
 
   return { svg, width: rect.width, height: rect.height };
 }

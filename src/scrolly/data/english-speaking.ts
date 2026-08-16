@@ -40,7 +40,8 @@ export const config = {
         key: 'workflow',
         title: 'Ежедневный цикл улучшения речи',
         mount: 'svg',
-        captionHtml: 'Три блока формируют замкнутый контур: speaking → vocabulary → input → confidence.',
+        captionHtml:
+          'Три блока формируют замкнутый контур: speaking → vocabulary → input → confidence.',
         props: {
           steps: [
             { id: 'speak', label: 'Speaking', minutes: '15–20 мин', color: '#2563eb' },
@@ -169,7 +170,11 @@ export const config = {
               speak: 5,
               cards: 35,
               inputMin: 10,
-              milestones: ['Настроить ChatGPT Voice / Loora', 'Создать Anki deck', 'Выбрать 2–3 input-ресурса'],
+              milestones: [
+                'Настроить ChatGPT Voice / Loora',
+                'Создать Anki deck',
+                'Выбрать 2–3 input-ресурса',
+              ],
             },
             {
               week: 2,
@@ -185,7 +190,11 @@ export const config = {
               speak: 6,
               cards: 45,
               inputMin: 15,
-              milestones: ['Добавить shadowing 2 мин/день', 'Self-recorded summary', 'Анализ filler words'],
+              milestones: [
+                'Добавить shadowing 2 мин/день',
+                'Self-recorded summary',
+                'Анализ filler words',
+              ],
             },
             {
               week: 4,
@@ -193,7 +202,11 @@ export const config = {
               speak: 6,
               cards: 50,
               inputMin: 15,
-              milestones: ['Ретроспектива по метрикам', 'Добавить ELSA/Loora при необходимости', 'План следующего месяца'],
+              milestones: [
+                'Ретроспектива по метрикам',
+                'Добавить ELSA/Loora при необходимости',
+                'План следующего месяца',
+              ],
             },
           ],
         },
