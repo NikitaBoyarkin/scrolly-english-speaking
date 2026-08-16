@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://scrolly-english-speaking.example.com',
+  site: 'https://nikitaboyarkin.github.io/scrolly-english-speaking/',
   output: 'static',
   integrations: [mdx(), sitemap()],
   vite: {
