@@ -54,7 +54,7 @@ export function render(mountId: string, props: { metrics?: Metric[] }) {
     .attr('width', 0)
     .attr('height', yScale.bandwidth())
     .attr('rx', 4)
-    .attr('fill', (d) => (d.value >= d.target * 0.9 ? '#06d6a0' : 'var(--accent)'))
+    .attr('fill', (d) => (d.value >= d.target * 0.9 ? 'var(--secondary)' : 'var(--accent)'))
     .transition()
     .duration(700)
     .attr('width', (d) => xScale(d.value));

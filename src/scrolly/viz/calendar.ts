@@ -29,7 +29,8 @@ export function render(mountId: string, props: { weeks?: WeekPlan[] }) {
     .domain(weeks.map((d) => `Неделя ${d.week}`))
     .range([0, innerH])
     .padding(0.25);
-  const xScale = d3.scaleLinear().domain([0, 60]).range([0, innerW]);
+  const xMax = Math.ceil((d3.max(weeks, (d) => Math.max(d.speak, d.cards)) || 0) * 1.2);
+  const xScale = d3.scaleLinear().domain([0, xMax]).range([0, innerW]);
 
   g.selectAll('rect.bg')
     .data(weeks)
@@ -66,7 +67,7 @@ export function render(mountId: string, props: { weeks?: WeekPlan[] }) {
     .attr('width', 0)
     .attr('height', yScale.bandwidth() * 0.28)
     .attr('rx', 4)
-    .attr('fill', '#06d6a0')
+    .attr('fill', 'var(--secondary)')
     .transition()
     .duration(600)
     .attr('width', (d) => xScale(d.cards));
@@ -115,6 +116,6 @@ export function render(mountId: string, props: { weeks?: WeekPlan[] }) {
     .attr('y', (d) => (yScale(`Неделя ${d.week}`) || 0) + yScale.bandwidth() * 0.72)
     .attr('font-size', '0.6rem')
     .attr('font-weight', '600')
-    .attr('fill', '#06d6a0')
+    .attr('fill', 'var(--secondary)')
     .text((d) => `${d.cards} cards · ${d.inputMin} мин input`);
 }

@@ -1,3 +1,21 @@
+/** Categorical palette for the input-resources viz. Single source of truth:
+ * the section legend below references these, and `viz/resources.ts` imports
+ * them — change a color here and both stay in sync. */
+export const resourceTypeColors: Record<string, string> = {
+  Podcast: '#2563eb',
+  YouTube: '#dc2626',
+  Newsletter: 'var(--secondary)',
+  'Docs / Course': '#7c3aed',
+};
+
+/** Categorical palette for the AI-tools viz (tier → color). */
+export const toolTierColors: Record<string, string> = {
+  free: 'var(--secondary)',
+  low: 'var(--secondary)',
+  mid: '#2563eb',
+  high: '#7c3aed',
+};
+
 export const config = {
   configId: 'english-speaking',
   metadata: {
@@ -62,9 +80,9 @@ export const config = {
         mount: 'svg',
         captionHtml: 'Сравнение по цене и бизнес-специфике. ChatGPT Voice — лучшая точка входа.',
         legend: [
-          { label: 'Бесплатно / дешево', color: '#06d6a0' },
-          { label: 'Средний ценник', color: '#2563eb' },
-          { label: 'Premium / Enterprise', color: '#7c3aed' },
+          { label: 'Бесплатно / дешево', color: toolTierColors.free },
+          { label: 'Средний ценник', color: toolTierColors.mid },
+          { label: 'Premium / Enterprise', color: toolTierColors.high },
         ],
         props: {
           tools: [
@@ -108,10 +126,10 @@ export const config = {
         mount: 'svg',
         captionHtml: 'Принцип comprehensible input: 70–90% понимания. Transcripts обязательны.',
         legend: [
-          { label: 'Podcast', color: '#2563eb' },
-          { label: 'YouTube', color: '#dc2626' },
-          { label: 'Newsletter', color: '#06d6a0' },
-          { label: 'Docs / Course', color: '#7c3aed' },
+          { label: 'Podcast', color: resourceTypeColors.Podcast },
+          { label: 'YouTube', color: resourceTypeColors.YouTube },
+          { label: 'Newsletter', color: resourceTypeColors.Newsletter },
+          { label: 'Docs / Course', color: resourceTypeColors['Docs / Course'] },
         ],
         props: {
           resources: [

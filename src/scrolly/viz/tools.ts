@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import { prepareSvg } from './shared';
+import { toolTierColors } from '../data/english-speaking';
 
 interface Tool {
   name: string;
@@ -20,15 +21,11 @@ export function render(mountId: string, props: { tools?: Tool[] }) {
   const innerW = width - margin.left - margin.right;
   const innerH = height - margin.top - margin.bottom;
 
-  const colorMap: Record<string, string> = {
-    free: '#06d6a0',
-    low: '#06d6a0',
-    mid: '#2563eb',
-    high: '#7c3aed',
-  };
+  const BUSINESS_SCORE_MAX = 10;
+  const yMax = Math.ceil((d3.max(tools, (d) => d.price) || 0) * 1.3);
 
-  const xScale = d3.scaleLinear().domain([0, 10]).nice().range([0, innerW]);
-  const yScale = d3.scaleLinear().domain([0, 30]).nice().range([innerH, 0]);
+  const xScale = d3.scaleLinear().domain([0, BUSINESS_SCORE_MAX]).nice().range([0, innerW]);
+  const yScale = d3.scaleLinear().domain([0, yMax]).nice().range([innerH, 0]);
 
   const g = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
 
@@ -98,11 +95,14 @@ export function render(mountId: string, props: { tools?: Tool[] }) {
     .attr('class', 'tool')
     .attr('cx', (d) => xScale(d.businessScore))
     .attr('cy', (d) => yScale(d.price))
-    .attr('r', (d) => (d.tier === 'free' ? 14 : 10))
-    .attr('fill', (d) => colorMap[d.tier] || '#2563eb')
+    .attr('r', 0)
+    .attr('fill', (d) => toolTierColors[d.tier] || '#2563eb')
     .attr('opacity', 0.85)
     .attr('stroke', 'var(--paper)')
-    .attr('stroke-width', 2);
+    .attr('stroke-width', 2)
+    .transition()
+    .duration(500)
+    .attr('r', (d) => (d.tier === 'free' ? 14 : 10));
 
   g.selectAll('text.label')
     .data(tools)

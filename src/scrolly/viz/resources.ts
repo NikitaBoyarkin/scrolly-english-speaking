@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import { prepareSvg } from './shared';
+import { resourceTypeColors } from '../data/english-speaking';
 
 interface Resource {
   name: string;
@@ -19,12 +20,7 @@ export function render(mountId: string, props: { resources?: Resource[] }) {
   const innerW = width - margin.left - margin.right;
   const innerH = height - margin.top - margin.bottom;
 
-  const colorMap: Record<string, string> = {
-    Podcast: '#2563eb',
-    YouTube: '#dc2626',
-    Newsletter: '#06d6a0',
-    'Docs / Course': '#7c3aed',
-  };
+  const levelLabels: Record<number, string> = { 1: 'A2', 2: 'B1', 3: 'B2' };
 
   const xScale = d3.scaleLinear().domain([1, 3]).range([0, innerW]).nice();
   const yScale = d3
@@ -41,7 +37,7 @@ export function render(mountId: string, props: { resources?: Resource[] }) {
       d3
         .axisBottom(xScale)
         .ticks(3)
-        .tickFormat((d) => (d === 1 ? 'A2' : d === 2 ? 'B1' : 'B2')),
+        .tickFormat((d) => levelLabels[Number(d)] ?? ''),
     )
     .call((s) =>
       s.selectAll('text').attr('font-size', '0.7rem').attr('fill', 'var(--ink-secondary)'),
@@ -72,7 +68,7 @@ export function render(mountId: string, props: { resources?: Resource[] }) {
     .attr('cx', (d) => xScale(d.level))
     .attr('cy', (d) => (yScale(d.name) || 0) + yScale.bandwidth() / 2)
     .attr('r', 0)
-    .attr('fill', (d) => colorMap[d.type] || '#9ca3af')
+    .attr('fill', (d) => resourceTypeColors[d.type] || '#9ca3af')
     .attr('stroke', 'var(--paper)')
     .attr('stroke-width', 2)
     .transition()

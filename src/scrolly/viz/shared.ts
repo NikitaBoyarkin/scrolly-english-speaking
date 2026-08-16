@@ -6,12 +6,26 @@ export interface SvgSize {
   height: number;
 }
 
-export function prepareSvg(mountId: string): SvgSize | null {
+export interface PrepareSvgOptions {
+  /** Interactive widgets: override the layout's role="img" + aria-labelledby
+   * with a descriptive aria-label (the per-row instruction matters more than
+   * the title). */
+  ariaLabel?: string;
+}
+
+export function prepareSvg(mountId: string, options: PrepareSvgOptions = {}): SvgSize | null {
   const node = document.getElementById(mountId) as SVGSVGElement | null;
   if (!node) return null;
 
+  node.replaceChildren();
   const svg = d3.select(node);
-  svg.selectAll('*').remove();
+
+  if (options.ariaLabel) {
+    svg
+      .attr('role', 'group')
+      .attr('aria-labelledby', null)
+      .attr('aria-label', options.ariaLabel);
+  }
 
   const rect = node.getBoundingClientRect();
   if (rect.width === 0 || rect.height === 0) return null;

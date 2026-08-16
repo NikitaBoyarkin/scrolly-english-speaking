@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { prepareSvg } from './shared';
 import {
   checklistStorageKey,
   loadChecklistState,
@@ -6,25 +7,19 @@ import {
   type ChecklistItem,
 } from './checklist-state';
 
+interface RowRefs {
+  row: SVGGElement;
+  box: SVGRectElement;
+  check: SVGPathElement | null;
+  text: SVGTextElement;
+}
+
 export function render(mountId: string, props: { items?: ChecklistItem[] }) {
-  const node = document.getElementById(mountId);
-  if (!node) return;
-
-  const svg = d3.select(node);
-  svg.selectAll('*').remove();
-  // Interactive checklist: override the layout's role="img" + aria-labelledby
-  // with a descriptive aria-label (the per-row instruction matters more than the title).
-  svg
-    .attr('role', 'group')
-    .attr('aria-labelledby', null)
-    .attr('aria-label', 'Чек-лист: нажмите, чтобы отметить шаг выполненным');
-
-  const rect = node.getBoundingClientRect();
-  const width = rect.width;
-  const height = rect.height;
-  if (width === 0 || height === 0) return;
-
-  svg.attr('viewBox', `0 0 ${width} ${height}`).attr('width', width).attr('height', height);
+  const prepared = prepareSvg(mountId, {
+    ariaLabel: 'Чек-лист: нажмите, чтобы отметить шаг выполненным',
+  });
+  if (!prepared) return;
+  const { svg, height } = prepared;
 
   const items = props?.items || [];
   if (items.length === 0) return;
@@ -32,17 +27,13 @@ export function render(mountId: string, props: { items?: ChecklistItem[] }) {
   const key = checklistStorageKey(mountId);
   const state = loadChecklistState(key, items, localStorage);
 
-  const margin = { top: 24, right: 16, bottom: 24, left: 24 };
-  const innerW = width - margin.left - margin.right;
+  const margin = { top: 24, bottom: 24, left: 24 };
   const innerH = height - margin.top - margin.bottom;
 
   const g = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
 
   const rowH = innerH / items.length;
-
-  function rerender() {
-    render(mountId, props);
-  }
+  const refs: RowRefs[] = [];
 
   items.forEach((item, i) => {
     const y = i * rowH + rowH * 0.15;
@@ -60,7 +51,7 @@ export function render(mountId: string, props: { items?: ChecklistItem[] }) {
       .attr('aria-label', item.label)
       .attr('tabindex', 0);
 
-    row
+    const box = row
       .append('rect')
       .attr('x', 0)
       .attr('y', boxY)
@@ -69,20 +60,23 @@ export function render(mountId: string, props: { items?: ChecklistItem[] }) {
       .attr('rx', 4)
       .attr('fill', done ? 'var(--secondary)' : 'var(--paper)')
       .attr('stroke', done ? 'var(--secondary)' : 'var(--border)')
-      .attr('stroke-width', 2);
+      .attr('stroke-width', 2)
+      .node() as SVGRectElement;
 
+    let check: SVGPathElement | null = null;
     if (done) {
-      row
+      check = row
         .append('path')
         .attr('d', `M 4 ${boxY + 9} L 8 ${boxY + 13} L 14 ${boxY + 5}`)
         .attr('fill', 'none')
         .attr('stroke', 'var(--paper)')
         .attr('stroke-width', 2)
         .attr('stroke-linecap', 'round')
-        .attr('stroke-linejoin', 'round');
+        .attr('stroke-linejoin', 'round')
+        .node() as SVGPathElement;
     }
 
-    row
+    const text = row
       .append('text')
       .attr('x', 28)
       .attr('y', y + h / 2)
@@ -91,12 +85,15 @@ export function render(mountId: string, props: { items?: ChecklistItem[] }) {
       .attr('font-weight', done ? '600' : '400')
       .attr('fill', done ? 'var(--ink-secondary)' : 'var(--ink)')
       .attr('text-decoration', done ? 'line-through' : 'none')
-      .text(item.label);
+      .text(item.label)
+      .node() as SVGTextElement;
+
+    refs.push({ row: row.node() as SVGGElement, box, check, text });
 
     const toggle = () => {
       state[i] = !state[i];
       saveChecklistState(key, state, localStorage);
-      rerender();
+      applyRowState(refs[i], state[i]);
     };
 
     row.on('click', (event: MouseEvent) => {
@@ -110,7 +107,36 @@ export function render(mountId: string, props: { items?: ChecklistItem[] }) {
       }
     });
   });
+}
 
-  // suppress unused var lint without runtime cost
-  void innerW;
+/** Update one row in place so the SVG is not rebuilt and keyboard focus is
+ * preserved across toggles (a full re-render would destroy the focused row). */
+function applyRowState(ref: RowRefs, done: boolean): void {
+  d3.select(ref.row).attr('aria-checked', String(done));
+
+  d3.select(ref.box)
+    .attr('fill', done ? 'var(--secondary)' : 'var(--paper)')
+    .attr('stroke', done ? 'var(--secondary)' : 'var(--border)');
+
+  if (done && !ref.check) {
+    const boxY = Number(ref.box.getAttribute('y'));
+    ref.check = d3
+      .select(ref.row)
+      .append('path')
+      .attr('d', `M 4 ${boxY + 9} L 8 ${boxY + 13} L 14 ${boxY + 5}`)
+      .attr('fill', 'none')
+      .attr('stroke', 'var(--paper)')
+      .attr('stroke-width', 2)
+      .attr('stroke-linecap', 'round')
+      .attr('stroke-linejoin', 'round')
+      .node() as SVGPathElement;
+  } else if (!done && ref.check) {
+    d3.select(ref.check).remove();
+    ref.check = null;
+  }
+
+  d3.select(ref.text)
+    .attr('font-weight', done ? '600' : '400')
+    .attr('fill', done ? 'var(--ink-secondary)' : 'var(--ink)')
+    .attr('text-decoration', done ? 'line-through' : 'none');
 }
