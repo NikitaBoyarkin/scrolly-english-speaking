@@ -21,10 +21,7 @@ export function prepareSvg(mountId: string, options: PrepareSvgOptions = {}): Sv
   const svg = d3.select(node);
 
   if (options.ariaLabel) {
-    svg
-      .attr('role', 'group')
-      .attr('aria-labelledby', null)
-      .attr('aria-label', options.ariaLabel);
+    svg.attr('role', 'group').attr('aria-labelledby', null).attr('aria-label', options.ariaLabel);
   }
 
   const rect = node.getBoundingClientRect();
