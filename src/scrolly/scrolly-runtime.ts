@@ -7,20 +7,32 @@ interface SectionState {
   mounted: boolean;
 }
 
+// props arrive as `unknown` from the build-time JSON config (trusted data module).
+// Cast to each renderer's exact prop type at this boundary.
 const vizRenderers: Record<string, VizRenderer> = {
-  workflow: (id, props) => import('./viz/workflow').then((m) => m.render(id, props)),
-  tools: (id, props) => import('./viz/tools').then((m) => m.render(id, props)),
-  bars: (id, props) => import('./viz/bars').then((m) => m.render(id, props)),
-  resources: (id, props) => import('./viz/resources').then((m) => m.render(id, props)),
-  metrics: (id, props) => import('./viz/metrics').then((m) => m.render(id, props)),
-  calendar: (id, props) => import('./viz/calendar').then((m) => m.render(id, props)),
-  checklist: (id, props) => import('./viz/checklist').then((m) => m.render(id, props)),
+  workflow: (id, props) =>
+    import('./viz/workflow').then((m) => m.render(id, props as Parameters<typeof m.render>[1])),
+  tools: (id, props) =>
+    import('./viz/tools').then((m) => m.render(id, props as Parameters<typeof m.render>[1])),
+  bars: (id, props) =>
+    import('./viz/bars').then((m) => m.render(id, props as Parameters<typeof m.render>[1])),
+  resources: (id, props) =>
+    import('./viz/resources').then((m) => m.render(id, props as Parameters<typeof m.render>[1])),
+  metrics: (id, props) =>
+    import('./viz/metrics').then((m) => m.render(id, props as Parameters<typeof m.render>[1])),
+  calendar: (id, props) =>
+    import('./viz/calendar').then((m) => m.render(id, props as Parameters<typeof m.render>[1])),
+  checklist: (id, props) =>
+    import('./viz/checklist').then((m) => m.render(id, props as Parameters<typeof m.render>[1])),
 };
 
 export function initScrollyRuntime() {
   const rawConfig = document.getElementById('scrolly-section-config')?.textContent || '';
   const sectionConfig: { id: string; vizKey?: string; vizProps?: unknown }[] = rawConfig
-    ? parseJsonSafe(rawConfig) || []
+    ? (parseJsonSafe(rawConfig) as
+        | { id: string; vizKey?: string; vizProps?: unknown }[]
+        | null
+        | undefined) ?? []
     : [];
 
   const sectionConfigMap = new Map(sectionConfig.map((s) => [s.id, s]));
@@ -151,12 +163,20 @@ function initThemeToggle() {
   const root = document.documentElement;
   const stored = localStorage.getItem('scrolly-theme');
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  if (stored === 'dark' || (!stored && prefersDark)) {
+  const isDark = stored === 'dark' || (!stored && prefersDark);
+  if (isDark) {
     root.classList.add('dark-theme');
   }
+  const syncToggle = () => {
+    const dark = root.classList.contains('dark-theme');
+    toggle.setAttribute('aria-pressed', String(dark));
+    toggle.setAttribute('aria-label', dark ? 'Включить светлую тему' : 'Включить тёмную тему');
+  };
+  syncToggle();
 
   toggle.addEventListener('click', () => {
     root.classList.toggle('dark-theme');
     localStorage.setItem('scrolly-theme', root.classList.contains('dark-theme') ? 'dark' : 'light');
+    syncToggle();
   });
 }

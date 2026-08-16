@@ -1,4 +1,3 @@
-import * as d3 from 'd3';
 import { prepareSvg } from './shared';
 
 interface WorkflowStep {

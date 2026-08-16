@@ -5,7 +5,10 @@ export const config = {
     description:
       'Практический гайд по улучшению spoken English для работы (уровень A2–B1): AI-инструменты, SRS-словарь, аутентичный input, психология уверенности и 4-недельный план.',
     brand: 'DSWoK',
-    homeNavUrl: '/',
+    // 'home' is a sentinel — the layout resolves the actual href base-aware
+    // (BASE_URL subpath on GitHub Pages). Never set an absolute '/' here —
+    // that would point at the github.io root, off-site.
+    homeNavUrl: 'home',
   },
   hero: {
     label: 'Deep Research',

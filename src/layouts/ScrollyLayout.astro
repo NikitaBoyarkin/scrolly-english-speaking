@@ -108,7 +108,23 @@ const runtimeConfig = sections.map((s) => ({
 
 const title = metadata.title || 'Scrolly Story';
 const description = metadata.description || '';
-const siteUrl = Astro.site?.toString() || 'https://example.com';
+const origin = Astro.url.origin;
+const pageUrl = Astro.url.href;
+const ogImageUrl = `${origin}${base}og-image.png`;
+const faviconSvg = `${base}favicon.svg`;
+const faviconIco = `${base}favicon.ico`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  url: pageUrl,
+  image: ogImageUrl,
+  inLanguage: 'ru',
+  author: { '@type': 'Organization', name: metadata.brand || 'DSWoK' },
+  publisher: { '@type': 'Organization', name: metadata.brand || 'DSWoK' },
+};
 ---
 
 <!DOCTYPE html>
@@ -118,25 +134,38 @@ const siteUrl = Astro.site?.toString() || 'https://example.com';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={pageUrl} />
+    <link rel="icon" type="image/svg+xml" href={faviconSvg} />
+    <link rel="icon" type="image/x-icon" href={faviconIco} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content={siteUrl} />
+    <meta property="og:url" content={pageUrl} />
     <meta property="og:site_name" content={metadata.brand || 'Scrolly'} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
     <link rel="sitemap" href={`${base}sitemap-index.xml`} />
     <style set:html={`:root { --accent: ${accent}; --paper: ${paper}; --paper-dark: ${paperDark}; --ink: ${ink}; --secondary: ${secondary}; }`}></style>
     <script
       type="application/json"
       id="scrolly-section-config"
+      is:inline
       set:html={JSON.stringify(runtimeConfig)}
     ></script>
   </head>
   <body class="scrollytelling-theme">
-    <button class="theme-toggle" aria-label="Toggle theme">🌓</button>
+    <button class="theme-toggle" aria-label="Переключить тёмную тему" aria-pressed="false">🌓</button>
 
     {
       metadata.homeNavUrl && (
-        <a href={metadata.homeNavUrl} class="home-link">
+        <a href={base} class="home-link">
           ← {metadata.brand || 'Home'}
         </a>
       )
@@ -160,7 +189,7 @@ const siteUrl = Astro.site?.toString() || 'https://example.com';
           hero.stats && (
             <div class="hero-stats">
               {hero.stats.map((stat) => (
-                <div class="hero-stat" key={`stat-${stat.label}`}>
+                <div class="hero-stat">
                   <div class="hero-stat-value">
                     {stat.target}
                     <span class="hero-stat-unit">{stat.unit}</span>
@@ -180,7 +209,6 @@ const siteUrl = Astro.site?.toString() || 'https://example.com';
           <button
             class="nav-dot"
             data-target={s.id}
-            key={`dot-${s.id}`}
             aria-label={`Jump to ${s.navLabel || s.id}`}
             title={s.navLabel || s.id}
           />
@@ -202,7 +230,6 @@ const siteUrl = Astro.site?.toString() || 'https://example.com';
                 <div
                   class="viz-panel"
                   data-panel-for={s.id}
-                  key={`panel-${s.id}`}
                   style={{ display: 'flex' }}
                 >
                   {viz && (
@@ -236,7 +263,7 @@ const siteUrl = Astro.site?.toString() || 'https://example.com';
                   {viz?.legend && (
                     <div class="viz-legend">
                       {viz.legend.map((item) => (
-                        <span class="viz-legend-item" key={`legend-${item.label}`}>
+                        <span class="viz-legend-item">
                           <span
                             class="viz-legend-swatch"
                             style={{ backgroundColor: item.color }}
