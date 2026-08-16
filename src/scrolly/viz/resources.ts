@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { prepareSvg } from './shared';
+import { prepareSvg, estimateTextWidth } from './shared';
 import { resourceTypeColors } from '../data/english-speaking';
 
 interface Resource {
@@ -16,7 +16,15 @@ export function render(mountId: string, props: { resources?: Resource[] }) {
   const resources = props?.resources || [];
   if (resources.length === 0) return;
 
-  const margin = { top: 24, right: 16, bottom: 40, left: 140 };
+  // Left margin adapts to the longest resource name so labels never clip.
+  const nameFontPx = 10.5; // 0.66rem
+  const longestName = d3.max(resources, (d) => d.name.length) || 0;
+  const margin = {
+    top: 24,
+    right: 16,
+    bottom: 40,
+    left: Math.min(200, estimateTextWidth('W'.repeat(longestName), nameFontPx) + 20),
+  };
   const innerW = width - margin.left - margin.right;
   const innerH = height - margin.top - margin.bottom;
 

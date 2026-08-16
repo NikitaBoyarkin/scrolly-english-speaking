@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { prepareSvg } from './shared';
+import { prepareSvg, estimateTextWidth, clampX } from './shared';
 import { toolTierColors } from '../data/english-speaking';
 
 interface Tool {
@@ -9,8 +9,18 @@ interface Tool {
   tier: string;
 }
 
+const TIER_LABELS: Record<string, string> = {
+  free: 'Бесплатно',
+  low: 'Дёшево',
+  mid: 'Средний ценник',
+  high: 'Premium / Enterprise',
+};
+
 export function render(mountId: string, props: { tools?: Tool[] }) {
-  const prepared = prepareSvg(mountId);
+  const prepared = prepareSvg(mountId, {
+    ariaLabel:
+      'Сравнение AI-инструментов: цена и бизнес-специфика. Наведите на точку или сфокусируйтесь клавиатурой для деталей.',
+  });
   if (!prepared) return;
   const { svg, width, height } = prepared;
 
@@ -89,6 +99,58 @@ export function render(mountId: string, props: { tools?: Tool[] }) {
     .attr('fill', 'var(--ink)')
     .text('Цена, $/мес →');
 
+  // Tooltip group — appended to the root svg so it draws above axes and points.
+  const tooltip = svg
+    .append('g')
+    .attr('class', 'tooltip')
+    .attr('opacity', 0)
+    .style('pointer-events', 'none');
+  const tipRect = tooltip
+    .append('rect')
+    .attr('rx', 6)
+    .attr('fill', 'var(--paper)')
+    .attr('stroke', 'var(--border)')
+    .attr('stroke-width', 1);
+  const tipName = tooltip
+    .append('text')
+    .attr('font-size', '0.72rem')
+    .attr('font-weight', '700')
+    .attr('fill', 'var(--ink)');
+  const tipLine = tooltip
+    .append('text')
+    .attr('font-size', '0.66rem')
+    .attr('fill', 'var(--ink-secondary)');
+
+  function showTooltip(d: Tool, px: number, py: number) {
+    const detail = `$${d.price}/мес · бизнес-специфика ${d.businessScore}/10`;
+    tipName.text(d.name);
+    tipLine.text(`${detail} · ${TIER_LABELS[d.tier] || d.tier}`);
+    const w =
+      Math.max(estimateTextWidth(d.name, 11.5), estimateTextWidth(tipLine.text() || '', 10.5)) + 20;
+    const h = 44;
+    let tx = px + 14;
+    let ty = py - h - 10;
+    if (tx + w > width) tx = px - w - 14;
+    if (ty < 0) ty = py + 14;
+    tipRect.attr('x', tx).attr('y', ty).attr('width', w).attr('height', h);
+    tipName.attr('x', tx + 10).attr('y', ty + 18);
+    tipLine.attr('x', tx + 10).attr('y', ty + 34);
+    tooltip.attr('opacity', 1);
+  }
+  function hideTooltip() {
+    tooltip.attr('opacity', 0);
+  }
+
+  const highlight = (
+    sel: d3.Selection<SVGCircleElement | d3.BaseType, Tool, null, undefined>,
+    on: boolean,
+  ) => {
+    sel
+      .attr('opacity', on ? 1 : 0.85)
+      .attr('stroke', on ? 'var(--ink)' : 'var(--paper)')
+      .attr('stroke-width', on ? 3 : 2);
+  };
+
   g.selectAll('circle.tool')
     .data(tools)
     .join('circle')
@@ -100,16 +162,37 @@ export function render(mountId: string, props: { tools?: Tool[] }) {
     .attr('opacity', 0.85)
     .attr('stroke', 'var(--paper)')
     .attr('stroke-width', 2)
+    .attr('tabindex', 0)
+    .attr('role', 'img')
+    .attr('aria-label', (d) => `${d.name}: $${d.price}/мес, бизнес-специфика ${d.businessScore}/10`)
+    .style('cursor', 'pointer')
+    .on('mouseover', function (event, d) {
+      highlight(d3.select(this), true);
+      showTooltip(d, xScale(d.businessScore) + margin.left, yScale(d.price) + margin.top);
+    })
+    .on('mouseout', function () {
+      highlight(d3.select(this), false);
+      hideTooltip();
+    })
+    .on('focus', function (event, d) {
+      highlight(d3.select(this), true);
+      showTooltip(d, xScale(d.businessScore) + margin.left, yScale(d.price) + margin.top);
+    })
+    .on('blur', function () {
+      highlight(d3.select(this), false);
+      hideTooltip();
+    })
     .transition()
     .duration(500)
     .attr('r', (d) => (d.tier === 'free' ? 14 : 10));
 
+  // Labels alternate above/below by index so close points (TalkMe/ELSA) don't collide.
   g.selectAll('text.label')
     .data(tools)
     .join('text')
     .attr('class', 'label')
-    .attr('x', (d) => xScale(d.businessScore))
-    .attr('y', (d) => yScale(d.price) - 18)
+    .attr('x', (d) => clampX(xScale(d.businessScore), estimateTextWidth(d.name, 10.5), innerW))
+    .attr('y', (d, i) => (i % 2 === 0 ? yScale(d.price) - 18 : yScale(d.price) + 26))
     .attr('text-anchor', 'middle')
     .attr('font-size', '0.66rem')
     .attr('font-weight', '600')

@@ -1,11 +1,13 @@
 import * as d3 from 'd3';
-import { prepareSvg } from './shared';
+import { prepareSvg, estimateTextWidth, clampX } from './shared';
 
 interface Metric {
   label: string;
   value: number;
   target: number;
   unit: string;
+  /** Which direction counts as "good". Defaults to 'max' (higher is better). */
+  direction?: 'min' | 'max';
 }
 
 export function render(mountId: string, props: { metrics?: Metric[] }) {
@@ -33,6 +35,11 @@ export function render(mountId: string, props: { metrics?: Metric[] }) {
     .range([0, innerW])
     .nice();
 
+  // Filler words / anxiety are lower-is-better: green when at-or-under target,
+  // not when above it. Default 'max' keeps the old behavior for the rest.
+  const isGood = (d: Metric) =>
+    d.direction === 'min' ? d.value <= d.target * 1.1 : d.value >= d.target * 0.9;
+
   g.selectAll('line.target')
     .data(metrics)
     .join('line')
@@ -45,6 +52,18 @@ export function render(mountId: string, props: { metrics?: Metric[] }) {
     .attr('stroke-width', 2)
     .attr('stroke-dasharray', '4 2');
 
+  g.selectAll('text.target-label')
+    .data(metrics)
+    .join('text')
+    .attr('class', 'target-label')
+    .attr('x', (d) => clampX(xScale(d.target), estimateTextWidth('цель', 8.8), innerW))
+    .attr('y', (d) => yScale(d.label) || 0)
+    .attr('dy', '-0.2em')
+    .attr('text-anchor', 'middle')
+    .attr('font-size', '0.55rem')
+    .attr('fill', 'var(--ink-secondary)')
+    .text('цель');
+
   g.selectAll('rect.bar')
     .data(metrics)
     .join('rect')
@@ -54,7 +73,7 @@ export function render(mountId: string, props: { metrics?: Metric[] }) {
     .attr('width', 0)
     .attr('height', yScale.bandwidth())
     .attr('rx', 4)
-    .attr('fill', (d) => (d.value >= d.target * 0.9 ? 'var(--secondary)' : 'var(--accent)'))
+    .attr('fill', (d) => (isGood(d) ? 'var(--secondary)' : 'var(--accent)'))
     .transition()
     .duration(700)
     .attr('width', (d) => xScale(d.value));
@@ -82,17 +101,19 @@ export function render(mountId: string, props: { metrics?: Metric[] }) {
     .attr('text-anchor', 'end')
     .attr('font-size', '0.6rem')
     .attr('fill', 'var(--ink-secondary)')
-    .text((d) => `цель: ${d.target}${d.unit}`);
+    .text((d) => `цель: ${d.target} ${d.unit}`);
 
   g.selectAll('text.value')
     .data(metrics)
     .join('text')
     .attr('class', 'value')
-    .attr('x', (d) => xScale(d.value) + 6)
+    .attr('x', (d) =>
+      clampX(xScale(d.value) + 6, estimateTextWidth(`${d.value} ${d.unit}`, 11.5), innerW),
+    )
     .attr('y', (d) => (yScale(d.label) || 0) + yScale.bandwidth() / 2)
     .attr('dy', '0.35em')
     .attr('font-size', '0.72rem')
     .attr('font-weight', '700')
     .attr('fill', 'var(--ink)')
-    .text((d) => `${d.value}${d.unit}`);
+    .text((d) => `${d.value} ${d.unit}`);
 }

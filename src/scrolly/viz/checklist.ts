@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { prepareSvg } from './shared';
+import { prepareSvg, wrapText } from './shared';
 import {
   checklistStorageKey,
   loadChecklistState,
@@ -19,7 +19,7 @@ export function render(mountId: string, props: { items?: ChecklistItem[] }) {
     ariaLabel: 'Чек-лист: нажмите, чтобы отметить шаг выполненным',
   });
   if (!prepared) return;
-  const { svg, height } = prepared;
+  const { svg, width, height } = prepared;
 
   const items = props?.items || [];
   if (items.length === 0) return;
@@ -85,8 +85,19 @@ export function render(mountId: string, props: { items?: ChecklistItem[] }) {
       .attr('font-weight', done ? '600' : '400')
       .attr('fill', done ? 'var(--ink-secondary)' : 'var(--ink)')
       .attr('text-decoration', done ? 'line-through' : 'none')
-      .text(item.label)
       .node() as SVGTextElement;
+
+    // Long labels wrap to a second tspan instead of clipping on narrow panels.
+    const labelFontPx = 11.8; // 0.74rem
+    const availableW = width - margin.left - 28 - 8;
+    const lines = wrapText(item.label, availableW, labelFontPx);
+    lines.forEach((line, li) => {
+      d3.select(text)
+        .append('tspan')
+        .attr('x', 28)
+        .attr('dy', li === 0 ? '0em' : '1.2em')
+        .text(line);
+    });
 
     refs.push({ row: row.node() as SVGGElement, box, check, text });
 

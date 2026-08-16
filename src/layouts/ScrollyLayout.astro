@@ -1,64 +1,10 @@
 ---
 import '../components/scrolly/style.css';
 import '../styles/global.css';
+import type { ScrollyPageConfig, ScrollyFrontmatter } from '../scrolly/types';
+import { mergePageConfig } from '../scrolly/merge';
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-
-export interface ScrollyMetadata {
-  title?: string;
-  description?: string;
-  brand?: string;
-  homeNavUrl?: string;
-}
-
-export interface ScrollyHero {
-  label?: string;
-  titleHtml?: string;
-  subtitleHtml?: string;
-  authorsHtml?: string;
-  teaserHtml?: string;
-  ctaHref?: string;
-  stats?: { target: number; unit: string; label: string }[];
-}
-
-export interface ScrollyViz {
-  key: string;
-  title: string;
-  mount: 'svg' | 'div';
-  props?: unknown;
-  legend?: { label: string; color: string }[];
-  captionHtml?: string;
-}
-
-export interface ScrollySectionConfig {
-  id: string;
-  navLabel: string;
-  mobileLabel: string;
-  viz?: ScrollyViz;
-}
-
-export interface ScrollyTheme {
-  accent?: string;
-  paper?: string;
-  paperDark?: string;
-  ink?: string;
-  secondary?: string;
-}
-
-export interface ScrollyPageConfig {
-  configId: string;
-  metadata: ScrollyMetadata;
-  hero: ScrollyHero;
-  sections: ScrollySectionConfig[];
-  theme: ScrollyTheme;
-  footerHtml?: string;
-}
-
-export interface ScrollyFrontmatter {
-  configId?: string;
-  metadata?: ScrollyMetadata;
-  theme?: ScrollyTheme;
-}
 
 interface Props {
   frontmatter: ScrollyFrontmatter;
@@ -78,18 +24,11 @@ if (!baseConfig) {
   throw new Error(`No scrolly data module found for configId: ${configId}`);
 }
 
-// Safe merge: only allow plain-text metadata and theme overrides from MDX frontmatter.
+// Safe merge: only plain-text metadata and theme overrides from MDX frontmatter.
 // Hero HTML, sections and footer HTML always come from the trusted data module.
-const metadata: ScrollyMetadata = {
-  ...baseConfig.metadata,
-  ...(frontmatter?.metadata || {}),
-};
+const { metadata, theme } = mergePageConfig(baseConfig, frontmatter);
 const hero = baseConfig.hero;
 const sections = baseConfig.sections || [];
-const theme: ScrollyTheme = {
-  ...baseConfig.theme,
-  ...(frontmatter?.theme || {}),
-};
 const footerHtml = baseConfig.footerHtml || '';
 
 const accent = theme.accent || '#2563eb';
@@ -172,6 +111,14 @@ const jsonLd = {
     />
   </head>
   <body class="scrollytelling-theme">
+    <div
+      class="progress-bar"
+      role="progressbar"
+      aria-label="Прогресс чтения"
+      aria-valuemin="0"
+      aria-valuemax="100"
+    >
+    </div>
     <button class="theme-toggle" aria-label="Переключить тёмную тему" aria-pressed="false"
       >🌓</button
     >
@@ -243,10 +190,22 @@ const jsonLd = {
                 <div class="viz-panel" data-panel-for={s.id} style={{ display: 'flex' }}>
                   {viz && (
                     <div class="viz-header">
-                      <div class="viz-title" id={`viz-title-${s.id}`}>
-                        {viz.title}
+                      <div class="viz-header-text">
+                        <div class="viz-title" id={`viz-title-${s.id}`}>
+                          {viz.title}
+                        </div>
+                        {viz.captionHtml && <div class="viz-caption" set:html={viz.captionHtml} />}
                       </div>
-                      {viz.captionHtml && <div class="viz-caption" set:html={viz.captionHtml} />}
+                      {viz.key === 'checklist' && (
+                        <button
+                          class="viz-reset"
+                          type="button"
+                          data-reset-checklist={s.id}
+                          aria-label="Сбросить отметки чек-листа"
+                        >
+                          Сбросить
+                        </button>
+                      )}
                     </div>
                   )}
                   <div class="viz-stage">

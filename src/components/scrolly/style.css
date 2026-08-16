@@ -29,6 +29,18 @@
   color: var(--ink);
 }
 
+/* Reading progress bar */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: var(--accent);
+  z-index: 60;
+  transition: width 0.1s linear;
+}
+
 /* Home link */
 .home-link {
   position: fixed;
@@ -281,6 +293,16 @@
   background: var(--paper-dark);
 }
 
+/* Wide MDX tables (tools/resources) must not break the mobile layout: on small
+   screens the table becomes its own scroll container instead of overflowing. */
+@media (max-width: 768px) {
+  .scroll-section table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 .data-source-tag {
   display: inline-block;
   font-size: 0.75rem;
@@ -308,9 +330,38 @@
 }
 
 .viz-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
   padding: 1rem 1.25rem;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
+}
+
+.viz-header-text {
+  min-width: 0;
+}
+
+.viz-reset {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  color: var(--ink-secondary);
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.viz-reset:hover,
+.viz-reset:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+  outline: none;
 }
 
 .viz-title {
@@ -430,7 +481,16 @@
 
 @media (max-width: 768px) {
   .nav-dots {
-    display: none;
+    left: 50%;
+    top: auto;
+    bottom: 1rem;
+    transform: translateX(-50%);
+    flex-direction: row;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.5rem 0.75rem;
+    box-shadow: var(--shadow);
   }
 }
 

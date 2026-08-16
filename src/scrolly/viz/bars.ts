@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { prepareSvg } from './shared';
+import { prepareSvg, estimateTextWidth, clampX } from './shared';
 
 interface BarItem {
   label: string;
@@ -75,11 +75,13 @@ export function render(mountId: string, props: { items?: BarItem[] }) {
     .data(items)
     .join('text')
     .attr('class', 'value')
-    .attr('x', (d) => xScale(d.value) + 6)
+    .attr('x', (d) =>
+      clampX(xScale(d.value) + 6, estimateTextWidth(`${d.value} ${d.unit}`, 11.5), innerW),
+    )
     .attr('y', (d) => (yScale(d.label) || 0) + yScale.bandwidth() / 2)
     .attr('dy', '0.35em')
     .attr('font-size', '0.72rem')
     .attr('font-weight', '700')
     .attr('fill', 'var(--ink)')
-    .text((d) => `${d.value}${d.unit}`);
+    .text((d) => `${d.value} ${d.unit}`);
 }

@@ -1,3 +1,5 @@
+import { checklistStorageKey } from './viz/checklist-state';
+
 type VizRenderer = (mountId: string, props: unknown) => void | Promise<void>;
 
 interface SectionState {
@@ -56,7 +58,6 @@ export function initScrollyRuntime() {
 
   const dots = Array.from(document.querySelectorAll('.nav-dot')) as HTMLElement[];
   let activeSectionId = '';
-  let resizeTimeout: ReturnType<typeof setTimeout> | null = null;
 
   function showPanelError(sectionId: string, message: string) {
     const panel = panels.get(sectionId);
@@ -71,6 +72,12 @@ export function initScrollyRuntime() {
     panels.forEach((panel, key) => {
       panel.classList.toggle('active', key === sectionId);
     });
+
+    // Keep the URL shareable without adding history entries on scroll.
+    const hash = `#section-${sectionId}`;
+    if (window.location.hash !== hash) {
+      history.replaceState(null, '', hash);
+    }
 
     const section = sections.find((s) => s.id === sectionId);
     if (section && section.vizKey) {
@@ -122,6 +129,8 @@ export function initScrollyRuntime() {
     dot.addEventListener('click', () => {
       const target = dot.getAttribute('data-target');
       if (target) {
+        // pushState so Back returns to the previous section.
+        history.pushState(null, '', `#section-${target}`);
         document
           .getElementById(`section-${target}`)
           ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -129,15 +138,96 @@ export function initScrollyRuntime() {
     });
   });
 
-  window.addEventListener('resize', () => {
-    if (resizeTimeout) clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-      if (activeSectionId) {
-        const section = sections.find((s) => s.id === activeSectionId);
-        if (section) section.mounted = false;
-        switchViz(activeSectionId, true);
+  // Back/forward: scroll to the section named in the hash.
+  window.addEventListener('hashchange', () => {
+    const id = (window.location.hash || '').replace('#section-', '');
+    if (id && document.getElementById(`section-${id}`)) {
+      document
+        .getElementById(`section-${id}`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+
+  // Deep link: jump straight to the section in the URL on load.
+  const initialHash = (window.location.hash || '').replace('#section-', '');
+  if (initialHash && document.getElementById(`section-${initialHash}`)) {
+    requestAnimationFrame(() => {
+      document
+        .getElementById(`section-${initialHash}`)
+        ?.scrollIntoView({ behavior: 'auto', block: 'start' });
+    });
+  }
+
+  // Reading progress bar.
+  const progressBar = document.querySelector('.progress-bar') as HTMLElement | null;
+  function updateProgress() {
+    if (!progressBar) return;
+    const doc = document.documentElement;
+    const total = doc.scrollHeight - window.innerHeight;
+    const pct = total > 0 ? Math.min(100, (window.scrollY / total) * 100) : 0;
+    progressBar.style.width = `${pct}%`;
+    progressBar.setAttribute('aria-valuenow', String(Math.round(pct)));
+  }
+  let ticking = false;
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          updateProgress();
+          ticking = false;
+        });
       }
-    }, 250);
+    },
+    { passive: true },
+  );
+  updateProgress();
+
+  // Re-render the active viz when its container actually resizes (not on every
+  // window resize event). Preserve checklist keyboard focus across the rebuild.
+  function reRenderActive() {
+    const section = sections.find((s) => s.id === activeSectionId);
+    if (!section) return;
+    const active = document.activeElement as HTMLElement | null;
+    const focusedRow = active?.classList.contains('checklist-row')
+      ? active.getAttribute('data-index')
+      : null;
+    section.mounted = false;
+    switchViz(activeSectionId, true);
+    if (focusedRow !== null) {
+      requestAnimationFrame(() => {
+        const row = document.querySelector(
+          `.checklist-row[data-index="${focusedRow}"]`,
+        ) as HTMLElement | null;
+        row?.focus();
+      });
+    }
+    updateProgress();
+  }
+
+  const sticky = document.querySelector('.viz-sticky');
+  if (sticky && typeof ResizeObserver !== 'undefined') {
+    const ro = new ResizeObserver(() => reRenderActive());
+    ro.observe(sticky);
+  }
+
+  // Checklist reset: clear persisted state and rebuild the active panel.
+  document.querySelectorAll('[data-reset-checklist]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const sectionId = btn.getAttribute('data-reset-checklist');
+      if (!sectionId) return;
+      try {
+        localStorage.removeItem(checklistStorageKey(`chart-${sectionId}`));
+      } catch {
+        /* storage unavailable — nothing to clear */
+      }
+      const section = sections.find((s) => s.id === sectionId);
+      if (section) {
+        section.mounted = false;
+        switchViz(sectionId, true);
+      }
+    });
   });
 
   if (sections.length > 0) {

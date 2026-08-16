@@ -61,6 +61,7 @@ export const config = {
         captionHtml:
           'Три блока формируют замкнутый контур: speaking → vocabulary → input → confidence.',
         props: {
+          center: { title: '30–45 мин', subtitle: 'каждый день' },
           steps: [
             { id: 'speak', label: 'Speaking', minutes: '15–20 мин', color: '#2563eb' },
             { id: 'vocab', label: 'Vocabulary', minutes: '10 мин', color: '#06d6a0' },
@@ -158,14 +159,15 @@ export const config = {
         key: 'metrics',
         title: 'Метрики прогресса уверенности',
         mount: 'svg',
-        captionHtml: 'Не акцент, а понятность и готовность начать разговор.',
+        captionHtml:
+          'Не акцент, а понятность и готовность начать разговор. Старт — 0, цель — пунктир. Filler words и anxiety: меньше — лучше.',
         props: {
           metrics: [
             { label: 'Speaking-initiation', value: 0, target: 5, unit: 'раз/день' },
             { label: 'Repair-tool usage', value: 0, target: 3, unit: 'раз/митинг' },
             { label: 'Daily practice', value: 0, target: 45, unit: 'мин' },
-            { label: 'Filler words', value: 10, target: 4, unit: 'на 100 слов' },
-            { label: 'Post-call anxiety', value: 4, target: 2, unit: '1–5' },
+            { label: 'Filler words', value: 10, target: 4, unit: 'на 100 слов', direction: 'min' },
+            { label: 'Post-call anxiety', value: 4, target: 2, unit: '1–5', direction: 'min' },
             { label: 'Perceived intelligibility', value: 50, target: 90, unit: '%' },
           ],
         },
@@ -179,8 +181,15 @@ export const config = {
         key: 'calendar',
         title: '4-недельный старт',
         mount: 'svg',
-        captionHtml: 'Неделя 1 — setup и ритм. Недели 2–4 — удержание и постепенный рост.',
+        captionHtml:
+          'Неделя 1 — setup и ритм. Недели 2–4 — удержание и рост. Полная ширина бара = недельная цель.',
+        legend: [
+          { label: 'Speaking-сессии (цель 7/нед)', color: 'var(--accent)' },
+          { label: 'Новые карточки (цель 60/нед)', color: 'var(--secondary)' },
+        ],
         props: {
+          speakTarget: 7,
+          cardsTarget: 60,
           weeks: [
             {
               week: 1,

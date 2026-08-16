@@ -52,7 +52,7 @@ npm run format       # prettier --write .
 1. Создать `src/scrolly/data/<id>.ts` с `export const config = { configId: '<id>', ... }`.
 2. Создать `src/posts/scrolly/<id>.mdx` с frontmatter `configId: "<id>"` и `<ScrollySection>` блоками.
 3. (Опционально) зарегистрировать новый рендерер в `scrolly-runtime.ts` → `vizRenderers`.
-4. `src/pages/index.astro` сейчас хардкодит редирект — для нескольких историй добавить listing-страницу.
+4. `src/pages/index.astro` — listing-страница: автоматически собирает карточки всех историй из `data/*.ts` + `posts/scrolly/*.mdx` (по `configId`).
 
 ## Деплой
 

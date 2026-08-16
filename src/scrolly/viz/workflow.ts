@@ -7,13 +7,18 @@ interface WorkflowStep {
   color: string;
 }
 
-export function render(mountId: string, props: { steps?: WorkflowStep[] }) {
+export function render(
+  mountId: string,
+  props: { steps?: WorkflowStep[]; center?: { title?: string; subtitle?: string } },
+) {
   const prepared = prepareSvg(mountId);
   if (!prepared) return;
   const { svg, width, height } = prepared;
 
   const steps = props?.steps || [];
   if (steps.length === 0) return;
+
+  const center = props?.center;
 
   const cx = width / 2;
   const cy = height / 2;
@@ -22,21 +27,25 @@ export function render(mountId: string, props: { steps?: WorkflowStep[] }) {
 
   const group = svg.append('g').attr('transform', `translate(${cx}, ${cy})`);
 
-  group
-    .append('text')
-    .attr('text-anchor', 'middle')
-    .attr('y', -6)
-    .attr('font-size', '0.9rem')
-    .attr('font-weight', '700')
-    .attr('fill', 'var(--ink)')
-    .text('30–45 мин');
-  group
-    .append('text')
-    .attr('text-anchor', 'middle')
-    .attr('y', 14)
-    .attr('font-size', '0.7rem')
-    .attr('fill', 'var(--ink-secondary)')
-    .text('каждый день');
+  if (center?.title) {
+    group
+      .append('text')
+      .attr('text-anchor', 'middle')
+      .attr('y', -6)
+      .attr('font-size', '0.9rem')
+      .attr('font-weight', '700')
+      .attr('fill', 'var(--ink)')
+      .text(center.title);
+  }
+  if (center?.subtitle) {
+    group
+      .append('text')
+      .attr('text-anchor', 'middle')
+      .attr('y', 14)
+      .attr('font-size', '0.7rem')
+      .attr('fill', 'var(--ink-secondary)')
+      .text(center.subtitle);
+  }
 
   for (let i = 0; i < steps.length; i++) {
     const a1 = i * angleStep - Math.PI / 2;
@@ -51,7 +60,12 @@ export function render(mountId: string, props: { steps?: WorkflowStep[] }) {
       .attr('d', `M ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2}`)
       .attr('fill', 'none')
       .attr('stroke', 'var(--border)')
-      .attr('stroke-width', 3);
+      .attr('stroke-width', 3)
+      .attr('opacity', 0)
+      .transition()
+      .duration(500)
+      .delay(i * 120)
+      .attr('opacity', 1);
 
     const angle = Math.atan2(y2 - y1, x2 - x1);
     const ahLen = 8;
@@ -61,7 +75,12 @@ export function render(mountId: string, props: { steps?: WorkflowStep[] }) {
         'd',
         `M ${x2} ${y2} L ${x2 - ahLen * Math.cos(angle - Math.PI / 6)} ${y2 - ahLen * Math.sin(angle - Math.PI / 6)} L ${x2 - ahLen * Math.cos(angle + Math.PI / 6)} ${y2 - ahLen * Math.sin(angle + Math.PI / 6)} Z`,
       )
-      .attr('fill', 'var(--border)');
+      .attr('fill', 'var(--border)')
+      .attr('opacity', 0)
+      .transition()
+      .duration(500)
+      .delay(i * 120)
+      .attr('opacity', 1);
   }
 
   steps.forEach((step, i) => {
@@ -71,8 +90,21 @@ export function render(mountId: string, props: { steps?: WorkflowStep[] }) {
 
     const g = group.append('g').attr('transform', `translate(${x}, ${y})`);
 
-    g.append('circle').attr('r', 34).attr('fill', step.color).attr('opacity', 0.12);
-    g.append('circle').attr('r', 18).attr('fill', step.color);
+    g.append('circle')
+      .attr('r', 34)
+      .attr('fill', step.color)
+      .attr('opacity', 0)
+      .transition()
+      .duration(400)
+      .delay(200 + i * 120)
+      .attr('opacity', 0.12);
+    g.append('circle')
+      .attr('r', 0)
+      .attr('fill', step.color)
+      .transition()
+      .duration(500)
+      .delay(200 + i * 120)
+      .attr('r', 18);
 
     g.append('text')
       .attr('text-anchor', 'middle')
@@ -80,6 +112,11 @@ export function render(mountId: string, props: { steps?: WorkflowStep[] }) {
       .attr('font-size', '0.78rem')
       .attr('font-weight', '700')
       .attr('fill', 'var(--ink)')
+      .attr('opacity', 0)
+      .transition()
+      .duration(400)
+      .delay(300 + i * 120)
+      .attr('opacity', 1)
       .text(step.label);
 
     g.append('text')
@@ -87,6 +124,11 @@ export function render(mountId: string, props: { steps?: WorkflowStep[] }) {
       .attr('y', -44)
       .attr('font-size', '0.65rem')
       .attr('fill', 'var(--ink-secondary)')
+      .attr('opacity', 0)
+      .transition()
+      .duration(400)
+      .delay(300 + i * 120)
+      .attr('opacity', 1)
       .text(step.minutes);
   });
 }

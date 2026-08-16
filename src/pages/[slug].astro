@@ -1,6 +1,7 @@
 ---
 import type { MarkdownInstance } from 'astro';
-import ScrollyLayout, { type ScrollyFrontmatter } from '../layouts/ScrollyLayout.astro';
+import ScrollyLayout from '../layouts/ScrollyLayout.astro';
+import type { ScrollyFrontmatter } from '../scrolly/types';
 
 type ScrollyPost = MarkdownInstance<ScrollyFrontmatter>;
 
