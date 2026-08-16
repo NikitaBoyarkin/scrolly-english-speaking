@@ -1,5 +1,6 @@
 ---
 export const prerender = true;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 
 <html lang="ru">
@@ -7,9 +8,9 @@ export const prerender = true;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>Redirecting…</title>
-    <meta http-equiv="refresh" content="0;url=/english-speaking" />
+    <meta http-equiv="refresh" content={`0;url=${base}english-speaking`} />
   </head>
   <body>
-    <p>Redirecting to <a href="/english-speaking">English Speaking guide</a>…</p>
+    <p>Redirecting to <a href={`${base}english-speaking`}>English Speaking guide</a>…</p>
   </body>
 </html>

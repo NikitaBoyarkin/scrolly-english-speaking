@@ -2,6 +2,8 @@
 import '../components/scrolly/style.css';
 import '../styles/global.css';
 
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+
 export interface ScrollyMetadata {
   title?: string;
   description?: string;
@@ -121,7 +123,7 @@ const siteUrl = Astro.site?.toString() || 'https://example.com';
     <meta property="og:type" content="article" />
     <meta property="og:url" content={siteUrl} />
     <meta property="og:site_name" content={metadata.brand || 'Scrolly'} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href={`${base}sitemap-index.xml`} />
     <style set:html={`:root { --accent: ${accent}; --paper: ${paper}; --paper-dark: ${paperDark}; --ink: ${ink}; --secondary: ${secondary}; }`}></style>
     <script
       type="application/json"
