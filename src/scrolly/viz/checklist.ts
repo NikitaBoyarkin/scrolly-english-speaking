@@ -41,7 +41,12 @@ export function render(mountId: string, props: { items?: ChecklistItem[] }) {
 
   const svg = d3.select(node);
   svg.selectAll('*').remove();
-  svg.attr('role', 'group').attr('aria-label', 'Чек-лист: нажмите, чтобы отметить шаг выполненным');
+  // Interactive checklist: override the layout's role="img" + aria-labelledby
+  // with a descriptive aria-label (the per-row instruction matters more than the title).
+  svg
+    .attr('role', 'group')
+    .attr('aria-labelledby', null)
+    .attr('aria-label', 'Чек-лист: нажмите, чтобы отметить шаг выполненным');
 
   const rect = node.getBoundingClientRect();
   const width = rect.width;

@@ -234,7 +234,7 @@ const jsonLd = {
                 >
                   {viz && (
                     <div class="viz-header">
-                      <div class="viz-title">{viz.title}</div>
+                      <div class="viz-title" id={`viz-title-${s.id}`}>{viz.title}</div>
                       {viz.captionHtml && (
                         <div class="viz-caption" set:html={viz.captionHtml} />
                       )}
@@ -246,6 +246,8 @@ const jsonLd = {
                         <svg
                           id={`chart-${s.id}`}
                           data-viz-mount
+                          role="img"
+                          aria-labelledby={`viz-title-${s.id}`}
                           width="100%"
                           height="100%"
                         ></svg>
@@ -254,6 +256,8 @@ const jsonLd = {
                           id={`chart-${s.id}`}
                           data-viz-mount
                           class="viz-div-mount"
+                          role="img"
+                          aria-labelledby={`viz-title-${s.id}`}
                         ></div>
                       )
                     ) : (
