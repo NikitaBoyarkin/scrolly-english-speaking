@@ -2,7 +2,7 @@
  * the section legend below references these, and `viz/resources.ts` imports
  * them — change a color here and both stay in sync. */
 export const resourceTypeColors: Record<string, string> = {
-  Podcast: '#2563eb',
+  Podcast: '#ff6643',
   YouTube: '#dc2626',
   Newsletter: 'var(--secondary)',
   'Docs / Course': '#7c3aed',
@@ -12,7 +12,7 @@ export const resourceTypeColors: Record<string, string> = {
 export const toolTierColors: Record<string, string> = {
   free: 'var(--secondary)',
   low: 'var(--secondary)',
-  mid: '#2563eb',
+  mid: '#f59e0b',
   high: '#7c3aed',
 };
 
@@ -61,11 +61,11 @@ export const config = {
     ],
   },
   theme: {
-    accent: '#2563eb',
-    paper: '#ffffff',
-    paperDark: '#f7f7f7',
-    ink: '#111111',
-    secondary: '#06d6a0',
+    accent: '#ff6643',
+    paper: '#f4efca',
+    paperDark: '#fff6de',
+    ink: '#18181b',
+    secondary: '#0f766e',
   },
   sections: [
     {
@@ -81,8 +81,8 @@ export const config = {
         props: {
           center: { title: '30–45 мин', subtitle: 'каждый день' },
           steps: [
-            { id: 'speak', label: 'Speaking', minutes: '15–20 мин', color: '#2563eb' },
-            { id: 'vocab', label: 'Vocabulary', minutes: '10 мин', color: '#06d6a0' },
+            { id: 'speak', label: 'Speaking', minutes: '15–20 мин', color: '#ff6643' },
+            { id: 'vocab', label: 'Vocabulary', minutes: '10 мин', color: '#0f766e' },
             { id: 'input', label: 'Input', minutes: '10–15 мин', color: '#f59e0b' },
             { id: 'confidence', label: 'Confidence', minutes: '← результат', color: '#7c3aed' },
           ],
@@ -105,7 +105,7 @@ export const config = {
         ],
         props: {
           tools: [
-            { name: 'ChatGPT Voice', price: 0, businessScore: 5, tier: 'free' },
+            { name: 'ChatGPT Voice', price: 0, businessScore: 5, tier: 'free', recommended: true },
             { name: 'Talkio AI', price: 10, businessScore: 4, tier: 'low' },
             { name: 'TalkMe', price: 13, businessScore: 5, tier: 'mid' },
             { name: 'ELSA Speak', price: 13.33, businessScore: 7, tier: 'mid' },
@@ -127,8 +127,8 @@ export const config = {
         captionHtml: 'Дневная норма working professional. Целевой retention FSRS: 90–92%.',
         props: {
           items: [
-            { label: 'Новых карточек', value: 12.5, max: 20, unit: 'шт/день', color: '#2563eb' },
-            { label: 'Review cap', value: 150, max: 200, unit: 'карт/день', color: '#06d6a0' },
+            { label: 'Новых карточек', value: 12.5, max: 20, unit: 'шт/день', color: '#ff6643' },
+            { label: 'Review cap', value: 150, max: 200, unit: 'карт/день', color: '#0f766e' },
             { label: 'Retention', value: 91, max: 100, unit: '%', color: '#f59e0b' },
             { label: 'Время', value: 25, max: 45, unit: 'мин/день', color: '#7c3aed' },
           ],
@@ -152,7 +152,7 @@ export const config = {
         ],
         props: {
           resources: [
-            { name: 'BBC 6 Minute English', type: 'Podcast', level: 1.5 },
+            { name: 'BBC 6 Minute English', type: 'Podcast', level: 1.5, recommended: true },
             { name: 'Business English Pod', type: 'Podcast', level: 2 },
             { name: 'All Ears English', type: 'Podcast', level: 2 },
             { name: 'Down to Business English', type: 'Podcast', level: 2 },
@@ -491,5 +491,11 @@ export const config = {
     },
   ],
   footerHtml:
+    '<div class="scrolly-footer-links">' +
+    '<a href="https://nikitaboyarkin.github.io/Personal_Projects.github.io/">← Портфолио</a>' +
+    '<a href="https://github.com/NikitaBoyarkin">GitHub</a>' +
+    '<a href="https://www.linkedin.com/in/nikita-boyarkin">LinkedIn</a>' +
+    '<a href="https://t.me/lofinibo">Telegram</a>' +
+    '</div>' +
     '<p><strong>Методология:</strong> обзор основан на 60+ источниках 2024–2026 по AI-speaking инструментам, SRS, comprehensible input и психологии speaking anxiety. Полный список источников — в исходной заметке.</p>',
 };

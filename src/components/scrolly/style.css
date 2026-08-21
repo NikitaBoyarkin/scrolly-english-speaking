@@ -4,24 +4,27 @@
    mode; `.dark-theme` below overrides them in dark mode (it sorts after the
    inline `:root` in source order, so dark still wins). */
 :root {
-  --ink-secondary: #4b5563;
-  --accent-soft: rgba(37, 99, 235, 0.08);
+  --ink-secondary: #52525b;
+  --accent-soft: rgba(255, 102, 67, 0.1);
   --warm: #f59e0b;
-  --border: #e5e7eb;
+  --border: #e8e0bd;
   --radius: 1rem;
   --shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
   --nav-width: 3rem;
 }
 
+/* Obsidian-inspired dark theme (dark teal + coral accent) — matches the
+   portfolio palette. Sorts after the inline `:root` in source order, so dark
+   overrides the per-story light tokens. */
 .dark-theme {
-  --paper: #0b0d10;
-  --paper-dark: #111318;
-  --ink: #f1f3f5;
-  --ink-secondary: #9ba3af;
-  --accent: #3b82f6;
-  --accent-soft: rgba(59, 130, 246, 0.12);
-  --border: #2d323c;
-  --shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  --paper: #0f2a2b;
+  --paper-dark: #1a3435;
+  --ink: #e4e4e7;
+  --ink-secondary: #a1a1aa;
+  --accent: #ff8569;
+  --accent-soft: rgba(255, 133, 105, 0.14);
+  --border: #3f3f46;
+  --shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
 }
 
 .scrollytelling-theme {
@@ -65,6 +68,15 @@
   color: var(--accent);
   border-color: var(--accent);
   outline: none;
+}
+
+/* Portfolio link — stacks below the home link in the top-left. */
+.portfolio-link {
+  top: 3.6rem;
+}
+.portfolio-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 /* Hero */
@@ -744,6 +756,24 @@
   color: var(--ink-secondary);
   font-size: 0.9rem;
   line-height: 1.6;
+}
+
+.scrolly-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.scrolly-footer-links a {
+  color: var(--ink-secondary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
+
+.scrolly-footer-links a:hover {
+  color: var(--accent);
 }
 
 /* Theme toggle */

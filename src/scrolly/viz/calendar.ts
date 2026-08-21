@@ -149,4 +149,31 @@ export function render(
     .attr('font-weight', '600')
     .attr('fill', 'var(--ink-secondary)')
     .text((d) => `${d.cards} cards · ${d.inputMin} мин input`);
+
+  // Milestone count per week (right-aligned).
+  g.selectAll('text.milestones')
+    .data(weeks)
+    .join('text')
+    .attr('class', 'milestones')
+    .attr('x', innerW)
+    .attr('y', (d) => (yScale(`Неделя ${d.week}`) || 0) + yScale.bandwidth() * 0.5)
+    .attr('dy', '0.35em')
+    .attr('text-anchor', 'end')
+    .attr('font-size', '0.6rem')
+    .attr('font-weight', '600')
+    .attr('fill', 'var(--ink-secondary)')
+    .text((d) => `${(d.milestones || []).length} задач`);
+
+  // «Ты здесь» marker on the first week.
+  const first = weeks[0];
+  if (first) {
+    const y = (yScale(`Неделя ${first.week}`) || 0) + yScale.bandwidth() * 0.5;
+    g.append('text')
+      .attr('x', 0)
+      .attr('y', y - 14)
+      .attr('font-size', '0.6rem')
+      .attr('font-weight', '800')
+      .attr('fill', 'var(--accent)')
+      .text('← ты здесь');
+  }
 }

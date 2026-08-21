@@ -84,4 +84,22 @@ export function render(mountId: string, props: { items?: BarItem[] }) {
     .attr('font-weight', '700')
     .attr('fill', 'var(--ink)')
     .text((d) => `${d.value} ${d.unit}`);
+
+  // Percent-of-max marker, under the value (goal hint).
+  g.selectAll('text.pct')
+    .data(items)
+    .join('text')
+    .attr('class', 'pct')
+    .attr('x', (d) =>
+      clampX(
+        xScale(d.value) + 6,
+        estimateTextWidth(`${Math.round((d.value / d.max) * 100)}%`, 9.6),
+        innerW,
+      ),
+    )
+    .attr('y', (d) => (yScale(d.label) || 0) + yScale.bandwidth() / 2)
+    .attr('dy', '1.6em')
+    .attr('font-size', '0.6rem')
+    .attr('fill', 'var(--ink-secondary)')
+    .text((d) => `${Math.round((d.value / d.max) * 100)}% от нормы`);
 }

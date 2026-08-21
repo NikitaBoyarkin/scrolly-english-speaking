@@ -7,6 +7,7 @@ interface Tool {
   price: number;
   businessScore: number;
   tier: string;
+  recommended?: boolean;
 }
 
 const TIER_LABELS: Record<string, string> = {
@@ -186,16 +187,74 @@ export function render(mountId: string, props: { tools?: Tool[] }) {
     .duration(500)
     .attr('r', (d) => (d.tier === 'free' ? 14 : 10));
 
-  // Labels alternate above/below by index so close points (TalkMe/ELSA) don't collide.
+  // Labels alternate above/below by index so close points (TalkMe/ELSA) don't
+  // collide — then a small greedy pass nudges any still-overlapping labels apart.
+  const labelH = 14; // ink box height for a 0.66rem label
+  const cy = tools.map((d, i) => ({
+    i,
+    cx: xScale(d.businessScore),
+    cy: i % 2 === 0 ? yScale(d.price) - 18 : yScale(d.price) + 26,
+    w: estimateTextWidth(d.name, 10.5),
+  }));
+  // Resolve overlaps: push the lower label below the upper one, repeat to fix chains.
+  for (let pass = 0; pass < cy.length; pass++) {
+    let moved = false;
+    for (let a = 0; a < cy.length; a++) {
+      for (let b = a + 1; b < cy.length; b++) {
+        const A = cy[a];
+        const B = cy[b];
+        const xOverlap = Math.abs(A.cx - B.cx) < (A.w + B.w) / 2 + 4;
+        const yOverlap = Math.abs(A.cy - B.cy) < labelH;
+        if (xOverlap && yOverlap) {
+          if (A.cy <= B.cy) {
+            B.cy = A.cy + labelH;
+          } else {
+            A.cy = B.cy + labelH;
+          }
+          moved = true;
+        }
+      }
+    }
+    if (!moved) break;
+  }
+
   g.selectAll('text.label')
     .data(tools)
     .join('text')
     .attr('class', 'label')
-    .attr('x', (d) => clampX(xScale(d.businessScore), estimateTextWidth(d.name, 10.5), innerW))
-    .attr('y', (d, i) => (i % 2 === 0 ? yScale(d.price) - 18 : yScale(d.price) + 26))
+    .attr('x', (d, i) => clampX(cy[i].cx, cy[i].w, innerW))
+    .attr('y', (d, i) => cy[i].cy)
     .attr('text-anchor', 'middle')
     .attr('font-size', '0.66rem')
     .attr('font-weight', '600')
     .attr('fill', 'var(--ink)')
     .text((d) => d.name);
+
+  // Recommended highlight: a dashed ring + a «★ Старт» badge on the entry point.
+  tools.forEach((d) => {
+    if (!d.recommended) return;
+    const px = xScale(d.businessScore);
+    const py = yScale(d.price);
+    const ring = svg
+      .append('circle')
+      .attr('cx', px + margin.left)
+      .attr('cy', py + margin.top)
+      .attr('r', 20)
+      .attr('fill', 'none')
+      .attr('stroke', 'var(--accent)')
+      .attr('stroke-width', 2)
+      .attr('stroke-dasharray', '4 3')
+      .style('opacity', 0);
+    const badge = svg
+      .append('text')
+      .attr('x', px + margin.left + 20)
+      .attr('y', py + margin.top - 6)
+      .attr('font-size', '0.6rem')
+      .attr('font-weight', '800')
+      .attr('fill', 'var(--accent)')
+      .style('opacity', 0)
+      .text('★ Старт');
+    ring.transition().duration(400).style('opacity', 1);
+    badge.transition().duration(400).style('opacity', 1);
+  });
 }

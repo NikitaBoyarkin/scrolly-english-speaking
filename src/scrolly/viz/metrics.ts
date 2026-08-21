@@ -116,4 +116,19 @@ export function render(mountId: string, props: { metrics?: Metric[] }) {
     .attr('font-weight', '700')
     .attr('fill', 'var(--ink)')
     .text((d) => `${d.value} ${d.unit}`);
+
+  // Status dot: ✓ у цели (secondary) / ○ в работе (muted) — in the right margin
+  // so it never collides with the long value labels.
+  g.selectAll('circle.status')
+    .data(metrics)
+    .join('circle')
+    .attr('class', 'status')
+    .attr('cx', innerW + 46)
+    .attr('cy', (d) => (yScale(d.label) || 0) + yScale.bandwidth() / 2)
+    .attr('r', 4)
+    .attr('fill', (d) => (isGood(d) ? 'var(--secondary)' : 'var(--border)'))
+    .attr('stroke', 'var(--paper)')
+    .attr('stroke-width', 1)
+    .append('title')
+    .text((d) => (isGood(d) ? 'У цели' : 'В работе'));
 }
