@@ -16,6 +16,23 @@ export const toolTierColors: Record<string, string> = {
   high: '#7c3aed',
 };
 
+/** Categorical palette for the outcomes viz — the four skill dimensions each
+ * scenario trains (pronunciation / fluency / vocabulary / grammar). */
+export const outcomeSkillColors: Record<string, string> = {
+  pronunciation: '#f59e0b',
+  fluency: 'var(--accent)',
+  vocabulary: 'var(--secondary)',
+  grammar: '#7c3aed',
+};
+
+/** Human labels for the four skill dimensions (legend + card tooltips). */
+export const outcomeSkillLabels: Record<string, string> = {
+  pronunciation: 'Произношение',
+  fluency: 'Беглость',
+  vocabulary: 'Словарь',
+  grammar: 'Грамматика',
+};
+
 export const config = {
   configId: 'english-speaking',
   metadata: {
@@ -29,17 +46,18 @@ export const config = {
     homeNavUrl: 'home',
   },
   hero: {
-    label: 'Deep Research',
-    titleHtml: 'Английский для рабочих разговоров',
-    subtitleHtml: 'A2–B1: как перестать заикаться на митингах и начать говорить уверенно',
+    label: 'Deep Research · Гайд-исследование',
+    titleHtml: 'От замирания на митингах — к уверенному английскому',
+    subtitleHtml:
+      'Система из AI-speaking, SRS-словаря и comprehensible input: 30–45 минут в день, чтобы через 4 недели открывать митинг, объяснять метрики и отвечать на вопросы без паники.',
     authorsHtml: 'На основе 60+ источников 2024–2026',
     teaserHtml:
       'Минимальный набор: 15–20 мин speaking с AI, 10–15 sentence-карточек в Anki и 10–15 мин аутентичного input каждый день. Устная речь растёт от частых low-stakes разговоров, а не от зубрёжки грамматики.',
     ctaHref: '#section-intro',
     stats: [
-      { target: 30, unit: '–45 мин', label: 'ежедневно' },
-      { target: 60, unit: '+', label: 'источников' },
-      { target: 4, unit: ' недели', label: 'стартовый план' },
+      { target: 30, unit: '–45 мин', label: 'в день · ~5 ч/нед' },
+      { target: 20, unit: '–30 нед', label: 'до уверенного B1' },
+      { target: 6, unit: ' сценариев', label: 'рабочих ситуаций' },
     ],
   },
   theme: {
@@ -169,6 +187,115 @@ export const config = {
             { label: 'Filler words', value: 10, target: 4, unit: 'на 100 слов', direction: 'min' },
             { label: 'Post-call anxiety', value: 4, target: 2, unit: '1–5', direction: 'min' },
             { label: 'Perceived intelligibility', value: 50, target: 90, unit: '%' },
+          ],
+        },
+      },
+    },
+    {
+      id: 'outcomes',
+      navLabel: 'Результаты',
+      mobileLabel: 'Результаты',
+      viz: {
+        key: 'outcomes',
+        title: 'Что меняется после 4 недель',
+        mount: 'svg',
+        captionHtml:
+          'Шесть рабочих сценариев: «до → после» и ключевая фраза. Точки — какие навыки тренирует сценарий.',
+        legend: [
+          { label: 'Произношение', color: outcomeSkillColors.pronunciation },
+          { label: 'Беглость', color: outcomeSkillColors.fluency },
+          { label: 'Словарь', color: outcomeSkillColors.vocabulary },
+          { label: 'Грамматика', color: outcomeSkillColors.grammar },
+        ],
+        props: {
+          scenarios: [
+            {
+              title: 'Stand-up update',
+              before: 'сбивчивый импровиз',
+              after: '60-сек структура',
+              phrase: 'Yesterday I … Today I’m on …',
+              skills: { pronunciation: false, fluency: true, vocabulary: false, grammar: true },
+            },
+            {
+              title: 'Объяснить метрики VP',
+              before: 'увязаю в терминах',
+              after: 'язык инсайтов',
+              phrase: 'What this means in practice is…',
+              skills: { pronunciation: false, fluency: false, vocabulary: true, grammar: true },
+            },
+            {
+              title: 'Согласовать дедлайн',
+              before: 'соглашаюсь на всё',
+              after: 'polite pushback',
+              phrase: 'I understand the priority — here’s the trade-off.',
+              skills: { pronunciation: false, fluency: false, vocabulary: true, grammar: true },
+            },
+            {
+              title: 'Tough questions',
+              before: 'замираю',
+              after: 'работают repair-фразы',
+              phrase: 'Could you clarify what you mean by…?',
+              skills: { pronunciation: false, fluency: true, vocabulary: false, grammar: true },
+            },
+            {
+              title: 'Питч цифр и результатов',
+              before: 'топлю в деталях',
+              after: '3 числа + вывод',
+              phrase: 'The headline number is X — driven by Y.',
+              skills: { pronunciation: false, fluency: true, vocabulary: true, grammar: false },
+            },
+            {
+              title: 'Small talk до митинга',
+              before: 'молчу до старта',
+              after: 'лёгкий разговор',
+              phrase: 'How was your weekend? We’re about to kick off…',
+              skills: { pronunciation: true, fluency: false, vocabulary: true, grammar: false },
+            },
+          ],
+        },
+      },
+    },
+    {
+      id: 'cefr',
+      navLabel: 'Прогресс',
+      mobileLabel: 'Прогресс',
+      viz: {
+        key: 'cefr',
+        title: 'Путь по уровням CEFR',
+        mount: 'svg',
+        captionHtml:
+          'Честные сроки при ~5 ч/нед практики. B1 — реалистичная цель для рабочего speaking; C1 «за 32 недели» — маркетинг.',
+        props: {
+          dailyMinutes: 35,
+          levels: [
+            {
+              level: 'A2',
+              weeks: 0,
+              marker: 'Вы здесь',
+              skill: 'простые фразы, small talk',
+              color: 'var(--border)',
+            },
+            {
+              level: 'B1',
+              weeks: 30,
+              marker: 'Цель плана',
+              skill: 'stand-up, метрики, Q&A',
+              color: 'var(--accent)',
+            },
+            {
+              level: 'B2',
+              weeks: 75,
+              marker: 'Следующий шаг',
+              skill: 'дедлайны, питчи, дискуссии',
+              color: 'var(--secondary)',
+            },
+            {
+              level: 'C1',
+              weeks: 150,
+              marker: 'Горизонт',
+              skill: 'переговоры, выступления',
+              color: '#7c3aed',
+            },
           ],
         },
       },

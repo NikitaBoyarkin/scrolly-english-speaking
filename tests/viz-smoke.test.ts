@@ -11,6 +11,8 @@ const RENDERER_MODULES: Record<string, () => Promise<{ render: (...args: any[]) 
   bars: () => import('../src/scrolly/viz/bars'),
   resources: () => import('../src/scrolly/viz/resources'),
   metrics: () => import('../src/scrolly/viz/metrics'),
+  outcomes: () => import('../src/scrolly/viz/outcomes'),
+  cefr: () => import('../src/scrolly/viz/cefr'),
   calendar: () => import('../src/scrolly/viz/calendar'),
   checklist: () => import('../src/scrolly/viz/checklist'),
 };

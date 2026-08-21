@@ -427,6 +427,21 @@
   border-radius: 2px;
 }
 
+/* Outcome scenario cards */
+.outcome-card {
+  outline: none;
+}
+
+.outcome-card:focus-visible rect:first-of-type {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.outcome-card:hover rect:first-of-type {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
 @media (max-width: 1024px) {
   .viz-column {
     order: -1;
