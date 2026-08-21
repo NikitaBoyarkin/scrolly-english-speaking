@@ -20,6 +20,7 @@ export const VIZ_KEYS = [
   'metrics',
   'outcomes',
   'cefr',
+  'quiz',
   'calendar',
   'checklist',
 ] as const;

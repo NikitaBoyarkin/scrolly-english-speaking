@@ -13,6 +13,7 @@ const RENDERER_MODULES: Record<string, () => Promise<{ render: (...args: any[]) 
   metrics: () => import('../src/scrolly/viz/metrics'),
   outcomes: () => import('../src/scrolly/viz/outcomes'),
   cefr: () => import('../src/scrolly/viz/cefr'),
+  quiz: () => import('../src/scrolly/viz/quiz'),
   calendar: () => import('../src/scrolly/viz/calendar'),
   checklist: () => import('../src/scrolly/viz/checklist'),
 };
@@ -59,8 +60,16 @@ describe('E2 — viz renderers render without throwing', () => {
       try {
         const mod = await RENDERER_MODULES[viz.key]();
         expect(() => mod.render(mountId, viz.props)).not.toThrow();
-        // Renderer proceeded past the size guard: it set a viewBox on the svg mount.
-        expect(el.getAttribute('viewBox'), `${viz.key} did not set viewBox`).toBeTruthy();
+        if (viz.mount === 'div') {
+          // div-mount renderers (e.g. quiz) build DOM children instead of SVG.
+          expect(
+            el.children.length,
+            `${viz.key} (div mount) did not render content`,
+          ).toBeGreaterThan(0);
+        } else {
+          // svg-mount renderer proceeded past the size guard: it set a viewBox.
+          expect(el.getAttribute('viewBox'), `${viz.key} did not set viewBox`).toBeTruthy();
+        }
       } finally {
         el.remove();
       }

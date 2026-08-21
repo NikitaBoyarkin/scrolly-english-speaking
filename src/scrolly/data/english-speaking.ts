@@ -301,6 +301,107 @@ export const config = {
       },
     },
     {
+      id: 'quiz',
+      navLabel: 'Диагностика',
+      mobileLabel: 'Диагностика',
+      viz: {
+        key: 'quiz',
+        title: 'Где ты сейчас?',
+        mount: 'div',
+        captionHtml:
+          '4 вопроса — по оси навыка. Ответь честно, получи уровень и рабочий сценарий, с которого начать.',
+        props: {
+          questions: [
+            {
+              id: 'fluency',
+              label: 'Беглость',
+              prompt: 'Насколько плавно ты формулируешь мысль на митинге?',
+              options: [
+                { label: 'Запинаюсь, долго подбираю слова', score: 0 },
+                { label: 'Говорю, но медленно и с паузами', score: 1 },
+                { label: 'Говорю уверенно, изредка запинаюсь', score: 2 },
+                { label: 'Говорю свободно, почти без пауз', score: 3 },
+              ],
+            },
+            {
+              id: 'vocabulary',
+              label: 'Словарь',
+              prompt: 'Хватает ли слов для рабочих тем?',
+              options: [
+                { label: 'Только базовые фразы, часто ищу слово', score: 0 },
+                { label: 'Хватает на простые рабочие темы', score: 1 },
+                { label: 'Хватает на большинство рабочих тем', score: 2 },
+                { label: 'Хватает на сложные обсуждения и нюансы', score: 3 },
+              ],
+            },
+            {
+              id: 'grammar',
+              label: 'Грамматика',
+              prompt: 'Насколько уверенно строишь грамматически верные предложения?',
+              options: [
+                { label: 'Много ошибок, нарушаю понимание', score: 0 },
+                { label: 'Ошибки есть, но мысль понятна', score: 1 },
+                { label: 'Ошибки редки', score: 2 },
+                { label: 'Ошибки почти отсутствуют', score: 3 },
+              ],
+            },
+            {
+              id: 'pronunciation',
+              label: 'Произношение',
+              prompt: 'Насколько хорошо тебя понимают в разговоре?',
+              options: [
+                { label: 'Часто переспрашивают', score: 0 },
+                { label: 'Иногда переспрашивают', score: 1 },
+                { label: 'Понимают почти всегда', score: 2 },
+                { label: 'Понимают всегда, акцент лёгкий', score: 3 },
+              ],
+            },
+          ],
+          levels: [
+            {
+              min: 0,
+              max: 3,
+              label: 'Начало пути · A1–A2',
+              hint: 'Всё впереди: начни с ритма и low-stakes практики.',
+            },
+            {
+              min: 4,
+              max: 6,
+              label: 'Разогрев · A2',
+              hint: 'База есть, не хватает стабильности. Фокус — ежедневный ритм.',
+            },
+            {
+              min: 7,
+              max: 9,
+              label: 'Уверенный старт · B1',
+              hint: 'Ты почти готов к рабочим разговорам. Дожимай слабые оси.',
+            },
+            {
+              min: 10,
+              max: 12,
+              label: 'Шлифовка · B1+',
+              hint: 'Осталось отполировать нюансы и добавить уверенности.',
+            },
+          ],
+          recommendations: {
+            fluency: { scenario: 'Stand-up update', phrase: 'Yesterday I … Today I’m on …' },
+            vocabulary: {
+              scenario: 'Объяснить метрики VP',
+              phrase: 'What this means in practice is…',
+            },
+            grammar: {
+              scenario: 'Согласовать дедлайн',
+              phrase: 'I understand the priority — here’s the trade-off.',
+            },
+            pronunciation: {
+              scenario: 'Small talk до митинга',
+              phrase: 'How was your weekend? We’re about to kick off…',
+            },
+          },
+        },
+      },
+    },
+    {
       id: 'plan',
       navLabel: 'План',
       mobileLabel: 'План',
