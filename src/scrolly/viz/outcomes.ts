@@ -1,18 +1,8 @@
 import { prepareSvg, wrapText } from './shared';
 import { outcomeSkillColors, outcomeSkillLabels } from '../data/english-speaking';
+import type { OutcomesProps, OutcomeScenario } from '../props.schema';
 
-export interface OutcomeScenario {
-  title: string;
-  before: string;
-  after: string;
-  phrase: string;
-  skills: {
-    pronunciation: boolean;
-    fluency: boolean;
-    vocabulary: boolean;
-    grammar: boolean;
-  };
-}
+export type { OutcomeScenario };
 
 const SKILL_ORDER = ['pronunciation', 'fluency', 'vocabulary', 'grammar'] as const;
 
@@ -22,7 +12,7 @@ const SKILL_ORDER = ['pronunciation', 'fluency', 'vocabulary', 'grammar'] as con
  * измерений (pronunciation / fluency / vocabulary / grammar) — точки снизу
  * показывают, какие из них задействованы.
  */
-export function render(mountId: string, props: { scenarios?: OutcomeScenario[] }) {
+export function render(mountId: string, props: OutcomesProps) {
   const prepared = prepareSvg(mountId, {
     ariaLabel:
       'Рабочие сценарии: что меняется после 4 недель. Для каждого — ситуация, переход «до → после» и ключевая фраза.',

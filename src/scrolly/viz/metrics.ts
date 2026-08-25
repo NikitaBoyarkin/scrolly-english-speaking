@@ -1,16 +1,8 @@
 import * as d3 from 'd3';
 import { prepareSvg, estimateTextWidth, clampX, animMs } from './shared';
+import type { MetricsProps, Metric } from '../props.schema';
 
-interface Metric {
-  label: string;
-  value: number;
-  target: number;
-  unit: string;
-  /** Which direction counts as "good". Defaults to 'max' (higher is better). */
-  direction?: 'min' | 'max';
-}
-
-export function render(mountId: string, props: { metrics?: Metric[] }) {
+export function render(mountId: string, props: MetricsProps) {
   const prepared = prepareSvg(mountId);
   if (!prepared) return;
   const { svg, width, height } = prepared;

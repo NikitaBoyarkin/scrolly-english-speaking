@@ -1,15 +1,8 @@
 import * as d3 from 'd3';
 import { prepareSvg, estimateTextWidth, clampX, animMs } from './shared';
+import type { BarsProps } from '../props.schema';
 
-interface BarItem {
-  label: string;
-  value: number;
-  max: number;
-  unit: string;
-  color: string;
-}
-
-export function render(mountId: string, props: { items?: BarItem[] }) {
+export function render(mountId: string, props: BarsProps) {
   const prepared = prepareSvg(mountId);
   if (!prepared) return;
   const { svg, width, height } = prepared;

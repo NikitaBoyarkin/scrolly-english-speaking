@@ -2,38 +2,21 @@
  * Pure, unit-testable logic + persistence for the interactive self-assessment
  * viz («Где ты сейчас»). Extracted from `quiz.ts` so scoring, level lookup and
  * storage are testable with an injectable storage object (no DOM coupling).
+ *
+ * The quiz config shapes live in `props.schema.ts` (single source of truth for
+ * the zod contract and the renderer's prop type); re-exported here so the pure
+ * functions and their tests keep importing from this module.
  */
+import type {
+  QuizOption,
+  QuizQuestion,
+  QuizLevel,
+  QuizRecommendation,
+  QuizProps,
+} from '../props.schema';
 
-export interface QuizOption {
-  label: string;
-  score: number;
-}
-
-export interface QuizQuestion {
-  id: string;
-  label: string;
-  prompt: string;
-  options: QuizOption[];
-}
-
-export interface QuizLevel {
-  min: number;
-  max: number;
-  label: string;
-  hint: string;
-}
-
-export interface QuizRecommendation {
-  scenario: string;
-  phrase: string;
-}
-
-export interface QuizConfig {
-  title?: string;
-  questions: QuizQuestion[];
-  levels: QuizLevel[];
-  recommendations: Record<string, QuizRecommendation>;
-}
+export type { QuizOption, QuizQuestion, QuizLevel, QuizRecommendation };
+export type QuizConfig = QuizProps;
 
 export interface StorageLike {
   getItem(key: string): string | null;

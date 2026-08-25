@@ -1,19 +1,8 @@
 import * as d3 from 'd3';
 import { prepareSvg, estimateTextWidth, clampX, animMs } from './shared';
+import type { CalendarProps } from '../props.schema';
 
-interface WeekPlan {
-  week: number;
-  focus: string;
-  speak: number;
-  cards: number;
-  inputMin: number;
-  milestones: string[];
-}
-
-export function render(
-  mountId: string,
-  props: { weeks?: WeekPlan[]; speakTarget?: number; cardsTarget?: number },
-) {
+export function render(mountId: string, props: CalendarProps) {
   const prepared = prepareSvg(mountId);
   if (!prepared) return;
   const { svg, width, height } = prepared;

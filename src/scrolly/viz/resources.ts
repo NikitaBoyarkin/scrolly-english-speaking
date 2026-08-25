@@ -1,15 +1,9 @@
 import * as d3 from 'd3';
 import { prepareSvg, estimateTextWidth, animMs } from './shared';
 import { resourceTypeColors } from '../data/english-speaking';
+import type { ResourcesProps, Resource } from '../props.schema';
 
-interface Resource {
-  name: string;
-  type: string;
-  level: number;
-  recommended?: boolean;
-}
-
-export function render(mountId: string, props: { resources?: Resource[] }) {
+export function render(mountId: string, props: ResourcesProps) {
   const prepared = prepareSvg(mountId);
   if (!prepared) return;
   const { svg, width, height } = prepared;

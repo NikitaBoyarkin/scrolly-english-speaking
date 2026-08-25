@@ -3,6 +3,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { scrollyPageConfigSchema, VIZ_KEYS } from '../src/scrolly/config.schema';
+import { config as liveConfig } from '../src/scrolly/data/english-speaking';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const dataDir = join(here, '..', 'src', 'scrolly', 'data');
@@ -73,6 +74,43 @@ describe('A1 — every data config satisfies the schema', () => {
       const ids = parsed.sections.map((s) => s.id);
       expect(new Set(ids).size, `${file}: duplicate section ids`).toBe(ids.length);
     }
+  });
+});
+
+describe('A1b — viz props are validated per renderer key', () => {
+  /** Deep-clone the live story and return a fresh object for mutation. */
+  function brokenConfig() {
+    return structuredClone(liveConfig) as typeof liveConfig;
+  }
+
+  it('rejects a wrong-typed prop value with an issue under viz.props', () => {
+    const broken = brokenConfig();
+    // intro → workflow: `steps[0].color` must be a string.
+    (broken.sections[0].viz!.props as { steps: { color: unknown }[] }).steps[0].color = 123;
+
+    const res = scrollyPageConfigSchema.safeParse(broken);
+    if (res.success) throw new Error('expected the broken config to be rejected');
+    const issue = res.error.issues.find((i) => i.path.join('.').includes('viz.props'));
+    expect(issue, 'expected an issue at sections.N.viz.props').toBeTruthy();
+    expect(issue!.message).toContain('steps.0.color');
+  });
+
+  it('rejects an unknown key in a strict prop schema', () => {
+    const broken = brokenConfig();
+    // ai-tools → tools: extra field is not part of the contract.
+    (broken.sections[1].viz!.props as Record<string, unknown>).typoField = true;
+
+    const res = scrollyPageConfigSchema.safeParse(broken);
+    expect(res.success).toBe(false);
+  });
+
+  it('rejects a missing required quiz question field', () => {
+    const broken = brokenConfig();
+    const quiz = broken.sections.find((s) => s.id === 'quiz')!;
+    delete (quiz.viz!.props as { questions: { options?: unknown }[] }).questions[0].options;
+
+    const res = scrollyPageConfigSchema.safeParse(broken);
+    expect(res.success).toBe(false);
   });
 });
 

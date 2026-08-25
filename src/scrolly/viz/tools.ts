@@ -1,14 +1,7 @@
 import * as d3 from 'd3';
 import { prepareSvg, estimateTextWidth, clampX, animMs } from './shared';
 import { toolTierColors } from '../data/english-speaking';
-
-interface Tool {
-  name: string;
-  price: number;
-  businessScore: number;
-  tier: string;
-  recommended?: boolean;
-}
+import type { ToolsProps, Tool } from '../props.schema';
 
 const TIER_LABELS: Record<string, string> = {
   free: 'Бесплатно',
@@ -17,7 +10,7 @@ const TIER_LABELS: Record<string, string> = {
   high: 'Premium / Enterprise',
 };
 
-export function render(mountId: string, props: { tools?: Tool[] }) {
+export function render(mountId: string, props: ToolsProps) {
   const prepared = prepareSvg(mountId, {
     ariaLabel:
       'Сравнение AI-инструментов: цена и бизнес-специфика. Наведите на точку или сфокусируйтесь клавиатурой для деталей.',

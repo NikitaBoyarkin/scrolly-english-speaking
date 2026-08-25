@@ -1,16 +1,7 @@
 import { prepareSvg, animMs, animDelay } from './shared';
+import type { WorkflowProps } from '../props.schema';
 
-interface WorkflowStep {
-  id: string;
-  label: string;
-  minutes: string;
-  color: string;
-}
-
-export function render(
-  mountId: string,
-  props: { steps?: WorkflowStep[]; center?: { title?: string; subtitle?: string } },
-) {
+export function render(mountId: string, props: WorkflowProps) {
   const prepared = prepareSvg(mountId);
   if (!prepared) return;
   const { svg, width, height } = prepared;

@@ -7,8 +7,8 @@ import {
   computeTotals,
   findLevel,
   findRecommendation,
-  type QuizConfig,
 } from './quiz-state';
+import type { QuizProps } from '../props.schema';
 
 /**
  * «Где ты сейчас» — интерактивная самопроверка (мотив Fluently «Know exactly
@@ -16,7 +16,7 @@ import {
  * профиль по осям и рекомендуемый рабочий сценарий. Результат персистится в
  * localStorage; «Пройти заново» сбрасывает его.
  */
-export function render(mountId: string, props?: QuizConfig) {
+export function render(mountId: string, props?: QuizProps) {
   const mount = document.getElementById(mountId) as HTMLElement | null;
   if (!mount) return;
 

@@ -1,11 +1,7 @@
 import * as d3 from 'd3';
 import { prepareSvg, wrapText } from './shared';
-import {
-  checklistStorageKey,
-  loadChecklistState,
-  saveChecklistState,
-  type ChecklistItem,
-} from './checklist-state';
+import { checklistStorageKey, loadChecklistState, saveChecklistState } from './checklist-state';
+import type { ChecklistProps } from '../props.schema';
 
 interface RowRefs {
   row: SVGGElement;
@@ -14,7 +10,7 @@ interface RowRefs {
   text: SVGTextElement;
 }
 
-export function render(mountId: string, props: { items?: ChecklistItem[] }) {
+export function render(mountId: string, props: ChecklistProps) {
   const prepared = prepareSvg(mountId, {
     ariaLabel: 'Чек-лист: нажмите, чтобы отметить шаг выполненным',
   });

@@ -9,6 +9,7 @@
  * must not ship to the browser bundle).
  */
 import { z } from 'zod';
+import { VIZ_PROPS_SCHEMAS } from './props.schema';
 
 /** The set of viz renderers registered in `scrolly-runtime.ts`. Adding a new
  * renderer means extending this enum AND the runtime map. */
@@ -24,6 +25,8 @@ export const VIZ_KEYS = [
   'calendar',
   'checklist',
 ] as const;
+
+export type VizKey = (typeof VIZ_KEYS)[number];
 
 export const scrollyPageConfigSchema = z.object({
   configId: z.string().min(1),
@@ -57,6 +60,23 @@ export const scrollyPageConfigSchema = z.object({
           props: z.unknown().optional(),
           legend: z.array(z.object({ label: z.string(), color: z.string() })).optional(),
           captionHtml: z.string().optional(),
+        })
+        .superRefine((viz, ctx) => {
+          // Deep-validate props against the per-key schema from props.schema.ts.
+          // `props` is intentionally `unknown` here — the strict per-renderer
+          // contract lives in VIZ_PROPS_SCHEMAS and is checked at this boundary.
+          if (viz.props === undefined) return;
+          const res = VIZ_PROPS_SCHEMAS[viz.key].safeParse(viz.props);
+          if (!res.success) {
+            const detail = res.error.issues
+              .map((i) => `${i.path.join('.')}: ${i.message}`)
+              .join('; ');
+            ctx.addIssue({
+              code: 'custom',
+              path: ['props'],
+              message: `props for viz "${viz.key}" do not match the schema: ${detail}`,
+            });
+          }
         })
         .optional(),
     }),

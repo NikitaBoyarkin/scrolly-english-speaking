@@ -3,12 +3,14 @@
  *
  * Extracted from `checklist.ts` so the load/save logic is pure and unit-testable
  * with an injectable storage object (no global `localStorage` / DOM coupling).
+ *
+ * The item shape lives in `props.schema.ts` (single source of truth for the zod
+ * contract and the renderer's prop type); re-exported here so this module and
+ * its tests keep importing from here.
  */
+import type { ChecklistItem } from '../props.schema';
 
-export interface ChecklistItem {
-  label: string;
-  done: boolean;
-}
+export type { ChecklistItem };
 
 export interface StorageLike {
   getItem(key: string): string | null;

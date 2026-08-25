@@ -1,20 +1,15 @@
 import * as d3 from 'd3';
 import { prepareSvg, estimateTextWidth, clampX } from './shared';
+import type { CefrProps, CefrLevel } from '../props.schema';
 
-export interface CefrLevel {
-  level: string;
-  weeks: number;
-  marker: string;
-  skill: string;
-  color: string;
-}
+export type { CefrLevel };
 
 /**
  * CEFR-лестница: честные сроки перехода между уровнями при ритме
  * 30–45 мин/день (~5 ч/нед). Бары пропорциональны кумулятивным неделям —
  * визуально это «лестница» от A2 к C1, а не обещанные рекламой «32 недели до C1».
  */
-export function render(mountId: string, props: { levels?: CefrLevel[]; dailyMinutes?: number }) {
+export function render(mountId: string, props: CefrProps) {
   const prepared = prepareSvg(mountId, {
     ariaLabel:
       'Путь по уровням CEFR: A2 — вы здесь, B1 — цель плана, B2 и C1 — дальше. Сроки при 30–45 минутах в день.',
