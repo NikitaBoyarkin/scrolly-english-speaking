@@ -117,6 +117,14 @@ export function render(mountId: string, props?: QuizConfig) {
   }
 
   function renderResult() {
+    // Defensive: a result is only meaningful when every question is answered.
+    // Corrupt/partial state between load and render falls back to resuming the
+    // quiz instead of showing a score from unanswered (scored-as-0) axes.
+    const firstUnanswered = answers.findIndex((a) => a === null);
+    if (firstUnanswered !== -1) {
+      renderQuestion(firstUnanswered);
+      return;
+    }
     el.replaceChildren();
     const { scores, total } = computeTotals(answers, questions);
     const level = findLevel(total, config.levels) || { label: '', hint: '' };

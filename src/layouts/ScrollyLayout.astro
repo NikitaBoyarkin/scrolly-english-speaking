@@ -1,8 +1,10 @@
 ---
 import '../components/scrolly/style.css';
 import '../styles/global.css';
+import Head from '../components/Head.astro';
 import type { ScrollyPageConfig, ScrollyFrontmatter } from '../scrolly/types';
 import { mergePageConfig } from '../scrolly/merge';
+import { SITE } from '../scrolly/site';
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
@@ -45,11 +47,8 @@ const runtimeConfig = sections.map((s) => ({
 
 const title = metadata.title || 'Scrolly Story';
 const description = metadata.description || '';
-const origin = Astro.url.origin;
 const pageUrl = Astro.url.href;
-const ogImageUrl = `${origin}${base}og-image.png`;
-const faviconSvg = `${base}favicon.svg`;
-const faviconIco = `${base}favicon.ico`;
+const brand = metadata.brand || 'DSWoK';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -57,52 +56,27 @@ const jsonLd = {
   headline: title,
   description,
   url: pageUrl,
-  image: ogImageUrl,
+  image: `${Astro.url.origin}${base}og-image.png`,
   inLanguage: 'ru',
-  author: { '@type': 'Organization', name: metadata.brand || 'DSWoK' },
-  publisher: { '@type': 'Organization', name: metadata.brand || 'DSWoK' },
+  author: { '@type': 'Organization', name: brand },
+  publisher: { '@type': 'Organization', name: brand },
 };
 ---
 
 <!doctype html>
 <html lang="ru">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content={accent} />
-    <link rel="manifest" href={`${base}manifest.webmanifest`} />
-    <title>{title}</title>
-    <script is:inline>
-      (function () {
-        try {
-          var s = localStorage.getItem('scrolly-theme');
-          var d = s === 'dark' || (!s && window.matchMedia('(prefers-color-scheme: dark)').matches);
-          if (d) document.documentElement.classList.add('dark-theme');
-        } catch (e) {}
-      })();
-    </script>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={pageUrl} />
-    <link rel="icon" type="image/svg+xml" href={faviconSvg} />
-    <link rel="icon" type="image/x-icon" href={faviconIco} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="article" />
-    <meta property="og:url" content={pageUrl} />
-    <meta property="og:site_name" content={metadata.brand || 'Scrolly'} />
-    <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="ru_RU" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImageUrl} />
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
-    <link rel="sitemap" href={`${base}sitemap-index.xml`} />
-    <style
-      set:html={`:root { --accent: ${accent}; --paper: ${paper}; --paper-dark: ${paperDark}; --ink: ${ink}; --secondary: ${secondary}; }`}
-    ></style>
+    <Head
+      title={title}
+      description={description}
+      pageUrl={pageUrl}
+      base={base}
+      siteName={brand}
+      accent={accent}
+      ogType="article"
+      jsonLd={jsonLd}
+      themeVars={{ accent, paper, 'paper-dark': paperDark, ink, secondary }}
+    />
     <script
       type="application/json"
       id="scrolly-section-config"
@@ -131,7 +105,7 @@ const jsonLd = {
       )
     }
     <a
-      href="https://nikitaboyarkin.github.io/Personal_Projects.github.io/"
+      href={SITE.portfolioUrl}
       class="home-link portfolio-link"
       target="_blank"
       rel="noopener noreferrer"

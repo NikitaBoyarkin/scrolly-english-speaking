@@ -1,3 +1,5 @@
+import { SITE } from '../site';
+
 /** Categorical palette for the input-resources viz. Single source of truth:
  * the section legend below references these, and `viz/resources.ts` imports
  * them — change a color here and both stay in sync. */
@@ -492,10 +494,10 @@ export const config = {
   ],
   footerHtml:
     '<div class="scrolly-footer-links">' +
-    '<a href="https://nikitaboyarkin.github.io/Personal_Projects.github.io/">← Портфолио</a>' +
-    '<a href="https://github.com/NikitaBoyarkin">GitHub</a>' +
-    '<a href="https://www.linkedin.com/in/nikita-boyarkin">LinkedIn</a>' +
-    '<a href="https://t.me/lofinibo">Telegram</a>' +
+    `<a href="${SITE.portfolioUrl}">← Портфолио</a>` +
+    `<a href="${SITE.githubUrl}">GitHub</a>` +
+    `<a href="${SITE.linkedInUrl}">LinkedIn</a>` +
+    `<a href="${SITE.telegramUrl}">Telegram</a>` +
     '</div>' +
     '<p><strong>Методология:</strong> обзор основан на 60+ источниках 2024–2026 по AI-speaking инструментам, SRS, comprehensible input и психологии speaking anxiety. Полный список источников — в исходной заметке.</p>',
 };

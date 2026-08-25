@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { prepareSvg, estimateTextWidth, clampX } from './shared';
+import { prepareSvg, estimateTextWidth, clampX, animMs } from './shared';
 import { toolTierColors } from '../data/english-speaking';
 
 interface Tool {
@@ -167,7 +167,7 @@ export function render(mountId: string, props: { tools?: Tool[] }) {
     .attr('role', 'img')
     .attr('aria-label', (d) => `${d.name}: $${d.price}/мес, бизнес-специфика ${d.businessScore}/10`)
     .style('cursor', 'pointer')
-    .on('mouseover', function (event, d) {
+    .on('mouseover', function (_event, d) {
       highlight(d3.select(this), true);
       showTooltip(d, xScale(d.businessScore) + margin.left, yScale(d.price) + margin.top);
     })
@@ -175,7 +175,7 @@ export function render(mountId: string, props: { tools?: Tool[] }) {
       highlight(d3.select(this), false);
       hideTooltip();
     })
-    .on('focus', function (event, d) {
+    .on('focus', function (_event, d) {
       highlight(d3.select(this), true);
       showTooltip(d, xScale(d.businessScore) + margin.left, yScale(d.price) + margin.top);
     })
@@ -184,7 +184,7 @@ export function render(mountId: string, props: { tools?: Tool[] }) {
       hideTooltip();
     })
     .transition()
-    .duration(500)
+    .duration(animMs(500))
     .attr('r', (d) => (d.tier === 'free' ? 14 : 10));
 
   // Labels alternate above/below by index so close points (TalkMe/ELSA) don't
@@ -222,8 +222,8 @@ export function render(mountId: string, props: { tools?: Tool[] }) {
     .data(tools)
     .join('text')
     .attr('class', 'label')
-    .attr('x', (d, i) => clampX(cy[i].cx, cy[i].w, innerW))
-    .attr('y', (d, i) => cy[i].cy)
+    .attr('x', (_d, i) => clampX(cy[i].cx, cy[i].w, innerW))
+    .attr('y', (_d, i) => cy[i].cy)
     .attr('text-anchor', 'middle')
     .attr('font-size', '0.66rem')
     .attr('font-weight', '600')
@@ -254,7 +254,7 @@ export function render(mountId: string, props: { tools?: Tool[] }) {
       .attr('fill', 'var(--accent)')
       .style('opacity', 0)
       .text('★ Старт');
-    ring.transition().duration(400).style('opacity', 1);
-    badge.transition().duration(400).style('opacity', 1);
+    ring.transition().duration(animMs(400)).style('opacity', 1);
+    badge.transition().duration(animMs(400)).style('opacity', 1);
   });
 }

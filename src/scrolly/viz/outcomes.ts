@@ -91,7 +91,7 @@ export function render(mountId: string, props: { scenarios?: OutcomeScenario[] }
     // Before → after (wrapped, max 2 lines).
     const flipText = sc.before.length > 0 ? `до: ${sc.before} → после: ${sc.after}` : sc.after;
     const flipLines = wrapText(flipText, innerW, flipSize).slice(0, 2);
-    const flip = card
+    card
       .append('text')
       .attr('x', x + pad)
       .attr('y', y + pad + titleSize + 12)
@@ -101,7 +101,7 @@ export function render(mountId: string, props: { scenarios?: OutcomeScenario[] }
       .data(flipLines)
       .join('tspan')
       .attr('x', x + pad)
-      .attr('dy', (d, li) => (li === 0 ? '0em' : '1.25em'))
+      .attr('dy', (_d, li) => (li === 0 ? '0em' : '1.25em'))
       .text((d) => d);
 
     // Key phrase pill: wraps to fit the card width; bottom-aligned so the card
@@ -135,7 +135,7 @@ export function render(mountId: string, props: { scenarios?: OutcomeScenario[] }
       .data(phraseLines)
       .join('tspan')
       .attr('x', x + pad + 4)
-      .attr('dy', (d, li) => (li === 0 ? '0em' : '1.25em'))
+      .attr('dy', (_d, li) => (li === 0 ? '0em' : '1.25em'))
       .text((d) => d);
 
     // Skill dots at top-right of the title row.

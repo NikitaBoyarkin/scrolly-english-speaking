@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { prepareSvg, estimateTextWidth, clampX } from './shared';
+import { prepareSvg, estimateTextWidth, clampX, animMs } from './shared';
 
 interface WeekPlan {
   week: number;
@@ -74,7 +74,7 @@ export function render(
     .attr('rx', 4)
     .attr('fill', 'var(--accent)')
     .transition()
-    .duration(600)
+    .duration(animMs(600))
     .attr('width', (d) => xScale(d.speak / speakTarget));
 
   g.selectAll('rect.cards')
@@ -88,7 +88,7 @@ export function render(
     .attr('rx', 4)
     .attr('fill', 'var(--secondary)')
     .transition()
-    .duration(600)
+    .duration(animMs(600))
     .attr('width', (d) => xScale(d.cards / cardsTarget));
 
   g.selectAll('text.week')

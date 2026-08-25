@@ -1,4 +1,4 @@
-import { prepareSvg } from './shared';
+import { prepareSvg, animMs, animDelay } from './shared';
 
 interface WorkflowStep {
   id: string;
@@ -63,8 +63,8 @@ export function render(
       .attr('stroke-width', 3)
       .attr('opacity', 0)
       .transition()
-      .duration(500)
-      .delay(i * 120)
+      .duration(animMs(500))
+      .delay(animDelay(i * 120))
       .attr('opacity', 1);
 
     const angle = Math.atan2(y2 - y1, x2 - x1);
@@ -78,8 +78,8 @@ export function render(
       .attr('fill', 'var(--border)')
       .attr('opacity', 0)
       .transition()
-      .duration(500)
-      .delay(i * 120)
+      .duration(animMs(500))
+      .delay(animDelay(i * 120))
       .attr('opacity', 1);
   }
 
@@ -95,15 +95,15 @@ export function render(
       .attr('fill', step.color)
       .attr('opacity', 0)
       .transition()
-      .duration(400)
-      .delay(200 + i * 120)
+      .duration(animMs(400))
+      .delay(animDelay(200 + i * 120))
       .attr('opacity', 0.12);
     g.append('circle')
       .attr('r', 0)
       .attr('fill', step.color)
       .transition()
-      .duration(500)
-      .delay(200 + i * 120)
+      .duration(animMs(500))
+      .delay(animDelay(200 + i * 120))
       .attr('r', 18);
 
     g.append('text')
@@ -114,8 +114,8 @@ export function render(
       .attr('fill', 'var(--ink)')
       .attr('opacity', 0)
       .transition()
-      .duration(400)
-      .delay(300 + i * 120)
+      .duration(animMs(400))
+      .delay(animDelay(300 + i * 120))
       .attr('opacity', 1)
       .text(step.label);
 
@@ -126,8 +126,8 @@ export function render(
       .attr('fill', 'var(--ink-secondary)')
       .attr('opacity', 0)
       .transition()
-      .duration(400)
-      .delay(300 + i * 120)
+      .duration(animMs(400))
+      .delay(animDelay(300 + i * 120))
       .attr('opacity', 1)
       .text(step.minutes);
   });

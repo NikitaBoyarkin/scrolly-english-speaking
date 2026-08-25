@@ -1,0 +1,89 @@
+/* Listing page (index.astro) styles — the story-card grid that lists every
+   scrollytelling story. Token dependencies live in style.css / global.css. */
+
+.listing-hero {
+  padding: 6rem 1.5rem 3rem;
+  background: linear-gradient(180deg, var(--paper-dark) 0%, var(--paper) 100%);
+  border-bottom: 1px solid var(--border);
+}
+.listing-hero-inner {
+  max-width: 46rem;
+  margin: 0 auto;
+}
+.listing-title {
+  font-size: clamp(2rem, 1.2rem + 3vw, 3.25rem);
+  line-height: 1.1;
+  margin: 0.5rem 0 1rem;
+  color: var(--ink);
+}
+.listing-subtitle {
+  font-size: 1.125rem;
+  color: var(--ink-secondary);
+  margin: 0;
+}
+.stories-list {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.story-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.75rem 1.75rem 2rem;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: var(--ink);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.story-card:hover,
+.story-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  outline: none;
+}
+.story-card-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.story-card-title {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--ink);
+}
+.story-card-desc {
+  margin: 0;
+  color: var(--ink-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.story-card-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--ink-secondary);
+}
+.story-card-stat strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+.story-card-cta {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  color: var(--accent);
+}

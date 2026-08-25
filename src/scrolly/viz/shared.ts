@@ -65,3 +65,31 @@ export function wrapText(text: string, maxWidth: number, fontSizePx: number): st
   if (line) lines.push(line);
   return lines;
 }
+
+let reducedMotionCache: boolean | null = null;
+
+/** Whether the user prefers reduced motion. Cached — evaluated once because the
+ * preference cannot change within a page lifetime. The CSS-level guard in
+ * global.css only covers CSS transitions; D3 drives its own timer-based
+ * transitions in JS, so renderers must zero them here too. */
+export function prefersReducedMotion(): boolean {
+  if (reducedMotionCache === null) {
+    reducedMotionCache =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+  return reducedMotionCache;
+}
+
+/** Duration for a D3 transition — 0 under reduced motion (jump straight to the
+ * final state instead of animating). */
+export function animMs(base: number): number {
+  return prefersReducedMotion() ? 0 : base;
+}
+
+/** Delay for a D3 transition — 0 under reduced motion so staggered entry
+ * animations don't leave elements waiting before they appear. */
+export function animDelay(delay: number): number {
+  return prefersReducedMotion() ? 0 : delay;
+}

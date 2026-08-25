@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { prepareSvg, estimateTextWidth } from './shared';
+import { prepareSvg, estimateTextWidth, animMs } from './shared';
 import { resourceTypeColors } from '../data/english-speaking';
 
 interface Resource {
@@ -125,7 +125,7 @@ export function render(mountId: string, props: { resources?: Resource[] }) {
     .attr('role', 'img')
     .attr('aria-label', (d) => `${d.name} — ${d.type}, уровень ${levelLabels[d.level] || d.level}`)
     .style('cursor', 'pointer')
-    .on('mouseover', function (event, d) {
+    .on('mouseover', function (_event, d) {
       d3.select(this).attr('stroke', 'var(--ink)').attr('stroke-width', 3);
       showTip(
         d,
@@ -137,7 +137,7 @@ export function render(mountId: string, props: { resources?: Resource[] }) {
       d3.select(this).attr('stroke', 'var(--paper)').attr('stroke-width', 2);
       hideTip();
     })
-    .on('focus', function (event, d) {
+    .on('focus', function (_event, d) {
       d3.select(this).attr('stroke', 'var(--ink)').attr('stroke-width', 3);
       showTip(
         d,
@@ -150,7 +150,7 @@ export function render(mountId: string, props: { resources?: Resource[] }) {
       hideTip();
     })
     .transition()
-    .duration(500)
+    .duration(animMs(500))
     .attr('r', 7);
 
   // Recommended highlight: dashed ring + ★ badge.
@@ -169,7 +169,7 @@ export function render(mountId: string, props: { resources?: Resource[] }) {
       .attr('stroke-dasharray', '3 2')
       .style('opacity', 0)
       .transition()
-      .duration(400)
+      .duration(animMs(400))
       .style('opacity', 1);
     svg
       .append('text')
@@ -181,7 +181,7 @@ export function render(mountId: string, props: { resources?: Resource[] }) {
       .style('opacity', 0)
       .text('★ Старт')
       .transition()
-      .duration(400)
+      .duration(animMs(400))
       .style('opacity', 1);
   });
 

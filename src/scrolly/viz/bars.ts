@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { prepareSvg, estimateTextWidth, clampX } from './shared';
+import { prepareSvg, estimateTextWidth, clampX, animMs } from './shared';
 
 interface BarItem {
   label: string;
@@ -55,7 +55,7 @@ export function render(mountId: string, props: { items?: BarItem[] }) {
     .attr('rx', yScale.bandwidth() / 2)
     .attr('fill', (d) => d.color)
     .transition()
-    .duration(700)
+    .duration(animMs(700))
     .attr('width', (d) => xScale(d.value));
 
   g.selectAll('text.label')

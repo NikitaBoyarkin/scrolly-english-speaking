@@ -2,26 +2,12 @@
 import type { MarkdownInstance } from 'astro';
 import '../styles/global.css';
 import '../components/scrolly/style.css';
+import '../styles/listing.css';
+import Head from '../components/Head.astro';
+import type { ScrollyPageConfig } from '../scrolly/types';
 
 export const prerender = true;
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-
-interface ScrollyMetadata {
-  title?: string;
-  description?: string;
-  brand?: string;
-}
-interface ScrollyHero {
-  label?: string;
-  titleHtml?: string;
-  subtitleHtml?: string;
-  stats?: { target: number; unit: string; label: string }[];
-}
-interface ScrollyPageConfig {
-  configId: string;
-  metadata: ScrollyMetadata;
-  hero: ScrollyHero;
-}
 
 type Post = MarkdownInstance<{ configId?: string }>;
 
@@ -55,46 +41,26 @@ const siteTitle = 'Scrolly English Speaking';
 const siteDescription =
   'Scrollytelling-исследования и гайды по английскому для рабочих разговоров.';
 const pageUrl = Astro.url.href;
-const ogImageUrl = `${Astro.url.origin}${base}og-image.png`;
-const faviconSvg = `${base}favicon.svg`;
 ---
 
 <!doctype html>
 <html lang="ru">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ff6643" />
-    <link rel="manifest" href={`${base}manifest.webmanifest`} />
-    <title>{siteTitle}</title>
-    <script is:inline>
-      (function () {
-        try {
-          var s = localStorage.getItem('scrolly-theme');
-          var d = s === 'dark' || (!s && window.matchMedia('(prefers-color-scheme: dark)').matches);
-          if (d) document.documentElement.classList.add('dark-theme');
-        } catch (e) {}
-      })();
-    </script>
-    <meta name="description" content={siteDescription} />
-    <link rel="canonical" href={pageUrl} />
-    <link rel="icon" type="image/svg+xml" href={faviconSvg} />
-    <meta property="og:title" content={siteTitle} />
-    <meta property="og:description" content={siteDescription} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={pageUrl} />
-    <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="ru_RU" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={siteTitle} />
-    <meta name="twitter:description" content={siteDescription} />
-    <meta name="twitter:image" content={ogImageUrl} />
-    <link rel="sitemap" href={`${base}sitemap-index.xml`} />
-    <style
-      set:html={`:root { --accent: #ff6643; --paper: #f4efca; --paper-dark: #fff6de; --ink: #18181b; --secondary: #0f766e; }`}
-    ></style>
+    <Head
+      title={siteTitle}
+      description={siteDescription}
+      pageUrl={pageUrl}
+      base={base}
+      siteName="Scrolly English Speaking"
+      accent="#ff6643"
+      themeVars={{
+        accent: '#ff6643',
+        paper: '#f4efca',
+        'paper-dark': '#fff6de',
+        ink: '#18181b',
+        secondary: '#0f766e',
+      }}
+    />
   </head>
   <body class="scrollytelling-theme">
     <header class="listing-hero">
@@ -132,94 +98,5 @@ const faviconSvg = `${base}favicon.svg`;
         ))
       }
     </main>
-
-    <style>
-      .listing-hero {
-        padding: 6rem 1.5rem 3rem;
-        background: linear-gradient(180deg, var(--paper-dark) 0%, var(--paper) 100%);
-        border-bottom: 1px solid var(--border);
-      }
-      .listing-hero-inner {
-        max-width: 46rem;
-        margin: 0 auto;
-      }
-      .listing-title {
-        font-size: clamp(2rem, 1.2rem + 3vw, 3.25rem);
-        line-height: 1.1;
-        margin: 0.5rem 0 1rem;
-        color: var(--ink);
-      }
-      .listing-subtitle {
-        font-size: 1.125rem;
-        color: var(--ink-secondary);
-        margin: 0;
-      }
-      .stories-list {
-        max-width: 46rem;
-        margin: 0 auto;
-        padding: 2.5rem 1.5rem 5rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1.25rem;
-      }
-      .story-card {
-        display: flex;
-        flex-direction: column;
-        gap: 0.6rem;
-        padding: 1.75rem 1.75rem 2rem;
-        background: var(--paper);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        text-decoration: none;
-        color: var(--ink);
-        transition:
-          transform 0.2s ease,
-          border-color 0.2s ease,
-          box-shadow 0.2s ease;
-      }
-      .story-card:hover,
-      .story-card:focus-visible {
-        transform: translateY(-2px);
-        border-color: var(--accent);
-        outline: none;
-      }
-      .story-card-label {
-        font-size: 0.7rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--accent);
-      }
-      .story-card-title {
-        font-size: 1.5rem;
-        line-height: 1.2;
-        margin: 0;
-        color: var(--ink);
-      }
-      .story-card-desc {
-        margin: 0;
-        color: var(--ink-secondary);
-        font-size: 0.95rem;
-        line-height: 1.5;
-      }
-      .story-card-stats {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.25rem;
-        margin-top: 0.25rem;
-        font-size: 0.85rem;
-        color: var(--ink-secondary);
-      }
-      .story-card-stat strong {
-        color: var(--ink);
-        font-weight: 700;
-      }
-      .story-card-cta {
-        margin-top: 0.5rem;
-        font-weight: 600;
-        color: var(--accent);
-      }
-    </style>
   </body>
 </html>

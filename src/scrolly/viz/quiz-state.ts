@@ -103,12 +103,17 @@ export function findLevel(total: number, levels: QuizLevel[]): QuizLevel | undef
   return levels.find((l) => total >= l.min && total <= l.max);
 }
 
-/** The weakest axis (lowest score) → the scenario that trains it first. */
+/** The weakest axis (lowest score) → the scenario that trains it first. With no
+ * scores (empty input) there is no weakest axis — return an empty recommendation
+ * instead of arbitrarily picking the first question. */
 export function findRecommendation(
   scores: number[],
   questions: QuizQuestion[],
   recommendations: Record<string, QuizRecommendation>,
 ): { axisId: string; axisLabel: string; recommendation: QuizRecommendation } {
+  if (scores.length === 0) {
+    return { axisId: '', axisLabel: '', recommendation: { scenario: '', phrase: '' } };
+  }
   const minScore = Math.min(...scores);
   const idx = scores.findIndex((s) => s === minScore);
   const axisId = questions[idx]?.id || '';

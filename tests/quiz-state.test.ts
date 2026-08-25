@@ -171,4 +171,11 @@ describe('findRecommendation', () => {
     expect(axisLabel).toBe('Беглость');
     expect(recommendation.scenario).toBe('Stand-up');
   });
+
+  it('returns an empty recommendation for empty scores (no axes answered)', () => {
+    const { axisLabel, recommendation } = findRecommendation([], questions, recommendations);
+    expect(axisLabel).toBe('');
+    expect(recommendation.scenario).toBe('');
+    expect(recommendation.phrase).toBe('');
+  });
 });
