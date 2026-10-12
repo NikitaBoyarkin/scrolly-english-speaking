@@ -1,9 +1,38 @@
 # Scrolly English Speaking
 
-Scrollytelling-гайд по улучшению spoken English для рабочих разговоров (уровень A2–B1).
-Построен на Astro: data-driven конфиг + MDX-нарратив + D3-визуализации, деплой на GitHub Pages.
+> Scrollytelling-гайд по spoken English (A2–B1) на Astro 6 + D3 v7 с деплоем на GitHub Pages.
 
 **Живая страница:** https://nikitaboyarkin.github.io/scrolly-english-speaking/english-speaking
+
+## Navigation
+- 🌐 [Портфолио](https://nikitaboyarkin.github.io)
+- 🏦 [Флагман: Volta neobank](https://github.com/NikitaBoyarkin/volta-banking)
+- 🧪 Связанные: [supabase-product-analytics](https://github.com/NikitaBoyarkin/supabase-product-analytics) · [streamlit-app](https://github.com/NikitaBoyarkin/streamlit-app) · [airflow](https://github.com/NikitaBoyarkin/airflow)
+
+**На этой странице:** [Ситуация](#ситуация) · [Задача](#задача) · [Действия](#действия) · [Результат](#результат) · [Стек](#стек) · [Архитектура](#архитектура) · [Команды](#команды) · [Добавить новую историю](#добавить-новую-историю) · [Деплой](#деплой)
+
+## Ситуация
+
+Spoken English для рабочих разговоров на уровне A2–B1 трудно улучшать без наглядной, пошаговой подачи.
+
+## Задача
+
+Собрать data-driven scrollytelling-гайд с визуализациями и задеплоить его статикой.
+
+## Действия
+
+- Взял Astro 6 (`output: static`) + MDX + Tailwind v4 (через `@tailwindcss/vite`) и D3 v7 для визуализаций (workflow, tools, bars, resources, metrics, calendar, checklist).
+- Разделил контент и визуализации: MDX хранит нарратив, `src/scrolly/data/*.ts` — структуру секций и props визуализаций.
+- Настроил безопасный merge frontmatter: HTML hero/footer всегда берётся из `data/*.ts`, never из frontmatter (защита от инъекций).
+- Реализовал runtime на IntersectionObserver (`switchViz`, theme-toggle) с lazy import рендереров.
+- Настроил деплой на GitHub Pages (subpath `/scrolly-english-speaking/`, Node 22) через `.github/workflows/astro.yml`.
+
+## Результат
+
+Живая страница на GitHub Pages; новую историю добавляют в 4 шага (см. «Добавить новую историю»).
+
+Scrollytelling-гайд по улучшению spoken English для рабочих разговоров (уровень A2–B1).
+Построен на Astro: data-driven конфиг + MDX-нарратив + D3-визуализации, деплой на GitHub Pages.
 
 ## Стек
 
