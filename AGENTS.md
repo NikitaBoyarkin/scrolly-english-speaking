@@ -5,15 +5,15 @@ Scrollytelling-гайд по spoken English для работы (A2–B1). Astro
 ## Команды
 
 ```bash
-npm run dev          # localhost:4321
-npm run test         # vitest (happy-dom)
-npm run typecheck    # astro check
-npm run format       # prettier --write .
-npm run format:check
-npm run build        # dist/
+bun run dev          # localhost:4321
+bun run test         # vitest (happy-dom)
+bun run typecheck    # astro check
+bun run format       # prettier --write .
+bun run format:check
+bun run build        # dist/
 ```
 
-Все проверки гоняются в CI (`.github/workflows/astro.yml`) — перед коммитом: `npm run test && npm run typecheck && npm run format:check`.
+Все проверки гоняются в CI (`.github/workflows/astro.yml`) — перед коммитом: `bun run test && bun run typecheck && bun run format:check`.
 
 ## Архитектура (не сломай тройное разделение)
 

@@ -38,28 +38,20 @@ jobs:
       - name: Detect package manager
         id: detect-package-manager
         run: |
-          if [ -f "${{ github.workspace }}/yarn.lock" ]; then
-            echo "manager=yarn" >> $GITHUB_OUTPUT
-            echo "command=install" >> $GITHUB_OUTPUT
-            echo "runner=yarn" >> $GITHUB_OUTPUT
-            echo "lockfile=yarn.lock" >> $GITHUB_OUTPUT
-            exit 0
-          elif [ -f "${{ github.workspace }}/package.json" ]; then
-            echo "manager=npm" >> $GITHUB_OUTPUT
-            echo "command=ci" >> $GITHUB_OUTPUT
-            echo "runner=npx --no-install" >> $GITHUB_OUTPUT
-            echo "lockfile=package-lock.json" >> $GITHUB_OUTPUT
+          if [ -f "${{ github.workspace }}/bun.lock" ]; then
+            echo "manager=bun" >> $GITHUB_OUTPUT
+            echo "command=install --frozen-lockfile" >> $GITHUB_OUTPUT
+            echo "runner=bunx --no-install" >> $GITHUB_OUTPUT
+            echo "lockfile=bun.lock" >> $GITHUB_OUTPUT
             exit 0
           else
-            echo "Unable to determine package manager"
+            echo "Unable to determine package manager (bun.lock is missing)"
             exit 1
           fi
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '22'
-          cache: ${{ steps.detect-package-manager.outputs.manager }}
-          cache-dependency-path: ${{ env.BUILD_PATH }}/${{ steps.detect-package-manager.outputs.lockfile }}
+          bun-version: latest
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5

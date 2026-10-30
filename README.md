@@ -5,6 +5,7 @@
 **Живая страница:** https://nikitaboyarkin.github.io/scrolly-english-speaking/english-speaking
 
 ## Navigation
+
 - 🌐 [Портфолио](https://nikitaboyarkin.github.io)
 - 🏦 [Флагман: Volta neobank](https://github.com/NikitaBoyarkin/volta-banking)
 - 🧪 Связанные: [supabase-product-analytics](https://github.com/NikitaBoyarkin/supabase-product-analytics) · [streamlit-app](https://github.com/NikitaBoyarkin/streamlit-app) · [airflow](https://github.com/NikitaBoyarkin/airflow)
@@ -70,12 +71,12 @@ HTML hero/footer всегда берётся из `data/*.ts`, never из frontm
 ## Команды
 
 ```bash
-npm install
-npm run dev          # localhost:4321
-npm run build        # dist/
-npm run preview
-npm run typecheck    # astro check
-npm run format       # prettier --write .
+bun install
+bun run dev          # localhost:4321
+bun run build        # dist/
+bun run preview
+bun run typecheck    # astro check
+bun run format       # prettier --write .
 ```
 
 ## Добавить новую историю
