@@ -14,7 +14,13 @@ _>(_|(_)||\/(/_| |(_|||_>| |_>|_)(/_(_||<|| |(_|
 
 > Scrollytelling-гайд по spoken English (A2–B1) на Astro 6 + D3 v7 с деплоем на GitHub Pages.
 
+**Для кого:** те, кто учит разговорный английский для рабочих созвонов и уже знает грамматику на A2–B1. **Успешный прогон:** `bun run build` отдаёт статический `dist/` с listing-страницей `/` и историей `/english-speaking` — ровно то, что публикуется на GitHub Pages.
+
 **Живая страница:** https://nikitaboyarkin.github.io/scrolly-english-speaking/english-speaking
+
+**Репозиторий:** https://github.com/NikitaBoyarkin/scrolly-english-speaking
+
+**Кейс в портфолио:** https://nikitaboyarkin.github.io/projects/scrolly/
 
 ## Navigation
 
@@ -62,7 +68,7 @@ Scrollytelling-гайд по улучшению spoken English для рабоч
 src/
 ├── layouts/ScrollyLayout.astro   # единый шаблон: hero, 2-колоночный scrolly, viz-панели, head-мета
 ├── pages/
-│   ├── index.astro               # редирект на единственную историю
+│   ├── index.astro               # listing: карточки всех историй (data/*.ts + posts)
 │   └── [slug].astro              # getStaticPaths по src/posts/scrolly/*.mdx
 ├── posts/scrolly/*.mdx           # нарратив (текст разделов)
 ├── scrolly/
